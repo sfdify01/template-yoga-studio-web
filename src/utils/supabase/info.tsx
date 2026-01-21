@@ -2,7 +2,7 @@
 
 // Production branch (main) - cdfllxxtgguyveowmdis
 // Test branch - pbzpqsdjaiynrpjpubai
-const DEFAULT_PROJECT_ID = 'cdfllxxtgguyveowmdis';
+const DEFAULT_PROJECT_ID = "";
 const DEFAULT_SUPABASE_URL = `https://${DEFAULT_PROJECT_ID}.supabase.co`;
 const DEFAULT_ANON_KEY =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.XXXX.XXXX';

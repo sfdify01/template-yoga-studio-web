@@ -439,7 +439,7 @@ export const useConfig = () => {
           {
             headers: {
               'Authorization': `Bearer ${publicAnonKey}`,
-              'apikey': publicAnonKey,
+              'apikey': publicAnonKey, 'x-tenant-id': typeof window !== 'undefined' ? window.location.hostname : '',
             },
           }
         );
@@ -472,7 +472,7 @@ export const useConfig = () => {
           {
             headers: {
               'Authorization': `Bearer ${publicAnonKey}`,
-              'apikey': publicAnonKey,
+              'apikey': publicAnonKey, 'x-tenant-id': typeof window !== 'undefined' ? window.location.hostname : '',
             },
           }
         );
