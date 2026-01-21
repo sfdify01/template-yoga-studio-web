@@ -1,0 +1,47 @@
+[
+  {
+    "id": 1,
+    "name": "Margherita Pizza",
+    "description": "San Marzano tomatoes, fresh mozzarella, basil, EVOO",
+    "price": 14.99,
+    "image": "margherita pizza",
+    "category": "lunch",
+    "dietary": ["vegetarian"]
+  },
+  {
+    "id": 2,
+    "name": "Cappuccino",
+    "description": "Rich espresso with steamed milk and foam",
+    "price": 4.50,
+    "image": "cappuccino",
+    "category": "drinks",
+    "dietary": ["vegetarian"]
+  },
+  {
+    "id": 3,
+    "name": "Pasta Alfredo",
+    "description": "Fettuccine pasta in creamy parmesan sauce",
+    "price": 13.99,
+    "image": "pasta alfredo",
+    "category": "lunch",
+    "dietary": ["vegetarian"]
+  },
+  {
+    "id": 4,
+    "name": "Avocado Toast",
+    "description": "Sourdough, smashed avocado, cherry tomatoes, microgreens",
+    "price": 12.99,
+    "image": "avocado toast",
+    "category": "breakfast",
+    "dietary": ["vegetarian", "vegan"]
+  },
+  {
+    "id": 5,
+    "name": "Grilled Salmon",
+    "description": "Atlantic salmon with roasted vegetables",
+    "price": 22.00,
+    "image": "grilled salmon",
+    "category": "lunch",
+    "dietary": ["gluten-free"]
+  }
+]

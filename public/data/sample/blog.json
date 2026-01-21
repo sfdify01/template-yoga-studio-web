@@ -1,0 +1,9 @@
+{
+  "posts": [],
+  "categories": [
+    { "id": "recipe", "name": "Recipe", "icon": "🍝" },
+    { "id": "guide", "name": "Guide", "icon": "📖" },
+    { "id": "news", "name": "News", "icon": "📰" },
+    { "id": "event", "name": "Event", "icon": "🎉" }
+  ]
+}

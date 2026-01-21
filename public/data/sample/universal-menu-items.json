@@ -1,0 +1,324 @@
+{
+  "items": [
+    {
+      "id": "custom-burger",
+      "name": "Build Your Burger",
+      "description": "Customize your perfect burger with premium Angus beef patty, fresh vegetables, and artisan bun",
+      "basePrice": {
+        "amountCents": 1400,
+        "currency": "USD"
+      },
+      "imageUrl": "https://source.unsplash.com/800x600/?gourmet-burger",
+      "tags": [
+        {
+          "id": "popular",
+          "label": "Popular",
+          "icon": "⭐",
+          "tone": "warning"
+        },
+        {
+          "id": "protein",
+          "label": "High Protein",
+          "tone": "success"
+        }
+      ],
+      "variantGroups": [
+        {
+          "id": "bun",
+          "title": "Choose Your Bun",
+          "type": "single",
+          "required": true,
+          "choices": [
+            {
+              "id": "brioche",
+              "label": "Brioche Bun",
+              "default": true
+            },
+            {
+              "id": "whole-wheat",
+              "label": "Whole Wheat Bun",
+              "priceDeltaCents": 50
+            },
+            {
+              "id": "lettuce-wrap",
+              "label": "Lettuce Wrap",
+              "description": "Low carb option",
+              "priceDeltaCents": 0
+            }
+          ]
+        },
+        {
+          "id": "patty",
+          "title": "Patty Style",
+          "type": "single",
+          "required": true,
+          "choices": [
+            {
+              "id": "single",
+              "label": "Single Patty (6oz)",
+              "default": true
+            },
+            {
+              "id": "double",
+              "label": "Double Patty (12oz)",
+              "priceDeltaCents": 400
+            },
+            {
+              "id": "impossible",
+              "label": "Impossible Burger",
+              "description": "Plant-based alternative",
+              "priceDeltaCents": 200
+            }
+          ]
+        },
+        {
+          "id": "cheese",
+          "title": "Cheese Selection",
+          "type": "single",
+          "required": false,
+          "choices": [
+            {
+              "id": "no-cheese",
+              "label": "No Cheese",
+              "default": true
+            },
+            {
+              "id": "cheddar",
+              "label": "Aged Cheddar",
+              "priceDeltaCents": 100
+            },
+            {
+              "id": "swiss",
+              "label": "Swiss",
+              "priceDeltaCents": 100
+            },
+            {
+              "id": "blue",
+              "label": "Blue Cheese",
+              "priceDeltaCents": 150
+            }
+          ]
+        }
+      ],
+      "addonGroups": [
+        {
+          "id": "toppings",
+          "title": "Premium Toppings",
+          "type": "multi",
+          "max": 5,
+          "choices": [
+            {
+              "id": "bacon",
+              "label": "Applewood Smoked Bacon",
+              "priceDeltaCents": 200
+            },
+            {
+              "id": "avocado",
+              "label": "Fresh Avocado",
+              "priceDeltaCents": 150
+            },
+            {
+              "id": "mushrooms",
+              "label": "Sautéed Mushrooms",
+              "priceDeltaCents": 100
+            },
+            {
+              "id": "onion-rings",
+              "label": "Crispy Onion Rings",
+              "priceDeltaCents": 150
+            },
+            {
+              "id": "fried-egg",
+              "label": "Fried Egg",
+              "priceDeltaCents": 150
+            }
+          ]
+        },
+        {
+          "id": "sauce",
+          "title": "Premium Sauces",
+          "type": "multi",
+          "max": 3,
+          "choices": [
+            {
+              "id": "truffle-aioli",
+              "label": "Truffle Aioli",
+              "priceDeltaCents": 75
+            },
+            {
+              "id": "chipotle-mayo",
+              "label": "Chipotle Mayo",
+              "priceDeltaCents": 50
+            },
+            {
+              "id": "garlic-aioli",
+              "label": "Garlic Aioli",
+              "priceDeltaCents": 50
+            }
+          ]
+        }
+      ],
+      "notesPlaceholder": "e.g., No pickles, extra sauce, well done...",
+      "nutrition": {
+        "calories": 680,
+        "protein": "42g",
+        "carbs": "45g",
+        "fat": "32g",
+        "fiber": "3g",
+        "sodium": "980mg"
+      },
+      "allergens": ["wheat", "eggs", "milk", "soy"],
+      "recommendations": ["french-fries", "onion-rings", "milkshake"]
+    },
+    {
+      "id": "custom-coffee",
+      "name": "Specialty Coffee",
+      "description": "Crafted with single-origin beans, roasted in-house daily",
+      "basePrice": {
+        "amountCents": 450,
+        "currency": "USD"
+      },
+      "imageUrl": "https://source.unsplash.com/800x600/?coffee-latte",
+      "tags": [
+        {
+          "id": "vegan-option",
+          "label": "Vegan Option",
+          "icon": "🌱",
+          "tone": "success"
+        }
+      ],
+      "variantGroups": [
+        {
+          "id": "size",
+          "title": "Size",
+          "type": "single",
+          "required": true,
+          "choices": [
+            {
+              "id": "small",
+              "label": "Small (12oz)",
+              "priceDeltaCents": -50
+            },
+            {
+              "id": "medium",
+              "label": "Medium (16oz)",
+              "default": true
+            },
+            {
+              "id": "large",
+              "label": "Large (20oz)",
+              "priceDeltaCents": 75
+            }
+          ]
+        },
+        {
+          "id": "style",
+          "title": "Coffee Style",
+          "type": "single",
+          "required": true,
+          "choices": [
+            {
+              "id": "latte",
+              "label": "Latte",
+              "default": true
+            },
+            {
+              "id": "cappuccino",
+              "label": "Cappuccino"
+            },
+            {
+              "id": "americano",
+              "label": "Americano",
+              "priceDeltaCents": -100
+            },
+            {
+              "id": "mocha",
+              "label": "Mocha",
+              "priceDeltaCents": 75
+            }
+          ]
+        },
+        {
+          "id": "milk",
+          "title": "Milk Choice",
+          "type": "single",
+          "required": true,
+          "choices": [
+            {
+              "id": "whole",
+              "label": "Whole Milk",
+              "default": true
+            },
+            {
+              "id": "oat",
+              "label": "Oat Milk",
+              "priceDeltaCents": 75
+            },
+            {
+              "id": "almond",
+              "label": "Almond Milk",
+              "priceDeltaCents": 75
+            },
+            {
+              "id": "soy",
+              "label": "Soy Milk",
+              "priceDeltaCents": 50
+            }
+          ]
+        }
+      ],
+      "addonGroups": [
+        {
+          "id": "shots",
+          "title": "Add Extra Shots",
+          "type": "multi",
+          "max": 3,
+          "choices": [
+            {
+              "id": "espresso-shot",
+              "label": "Espresso Shot",
+              "priceDeltaCents": 75
+            },
+            {
+              "id": "decaf-shot",
+              "label": "Decaf Shot",
+              "priceDeltaCents": 75
+            }
+          ]
+        },
+        {
+          "id": "syrups",
+          "title": "Flavor Syrups",
+          "type": "multi",
+          "max": 3,
+          "choices": [
+            {
+              "id": "vanilla",
+              "label": "Vanilla",
+              "priceDeltaCents": 50
+            },
+            {
+              "id": "caramel",
+              "label": "Caramel",
+              "priceDeltaCents": 50
+            },
+            {
+              "id": "hazelnut",
+              "label": "Hazelnut",
+              "priceDeltaCents": 50
+            }
+          ]
+        }
+      ],
+      "notesPlaceholder": "e.g., Extra hot, light foam, sugar-free...",
+      "nutrition": {
+        "calories": 190,
+        "protein": "9g",
+        "carbs": "18g",
+        "fat": "7g",
+        "sugar": "17g"
+      },
+      "allergens": ["milk"]
+    }
+  ]
+}

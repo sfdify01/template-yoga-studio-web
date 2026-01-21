@@ -1,0 +1,67 @@
+{
+  "id": "avo_toast",
+  "name": "Avocado Toast",
+  "description": "Sourdough, avocado, cherry tomatoes, microgreens, poached egg",
+  "basePrice": {
+    "amountCents": 1400,
+    "currency": "USD"
+  },
+  "imageUrl": "https://source.unsplash.com/800x600/?avocado-toast",
+  "tags": [
+    {
+      "id": "veg",
+      "label": "Vegetarian",
+      "tone": "success"
+    }
+  ],
+  "variantGroups": [
+    {
+      "id": "size",
+      "title": "Size",
+      "type": "single",
+      "required": true,
+      "choices": [
+        {
+          "id": "std",
+          "label": "Standard",
+          "default": true
+        },
+        {
+          "id": "lg",
+          "label": "Large",
+          "priceDeltaCents": 300
+        }
+      ]
+    }
+  ],
+  "addonGroups": [
+    {
+      "id": "extras",
+      "title": "Add extras",
+      "type": "multi",
+      "min": 0,
+      "max": 3,
+      "choices": [
+        {
+          "id": "cheese",
+          "label": "Feta",
+          "priceDeltaCents": 150
+        },
+        {
+          "id": "bacon",
+          "label": "Bacon",
+          "priceDeltaCents": 250
+        }
+      ]
+    }
+  ],
+  "notesPlaceholder": "No onions, extra sauce, well done...",
+  "nutrition": {
+    "calories": 520,
+    "protein": "16g",
+    "carbs": "48g",
+    "fat": "28g"
+  },
+  "allergens": ["eggs", "wheat"],
+  "recommendations": ["cold_brew", "brioche_french"]
+}

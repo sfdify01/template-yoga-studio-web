@@ -1,0 +1,2169 @@
+## Uber Developers
+
+### [UberDevelopers](/)
+
+[Docs](/docs)
+
+Search
+
+[Sign in](/dashboard)
+
+## JS SDK Guide
+
+### ¶ Getting Started
+
+The [Uber JS SDK](https://www.npmjs.com/package/uber-direct) allows you to easily integrate Uber Direct APIs and Organization APIs into your applications. This guide will help you
+
+#### ¶ Requirements
+
+##### ¶ Uber Direct Account
+
+To create an Uber Direct developer account, visit [
+
+Your app must have the following scopes to access each API:
+
+  * DaaS API: `eats.deliveries`
+  * Organizations API: `direct.organizations`
+
+You should pass in these scopes when requesting an access token (see Authentication below).
+
+##### ¶ Node
+
+This package supports Node versions 18 and above. You can install it with `brew` on Mac:
+
+    brew install node@18
+
+For Windows, check out [nvm-windows](https://github.com/coreybutler/nvm-windows).
+
+For more Node downloads, check out this [link](https://nodejs.org/en/download).
+
+#### ¶ Installation
+
+To install the Uber JS SDK, run the following command:
+
+    npm install uber-direct
+
+#### ¶ Set Environment Variables
+
+To use the Uber Direct JS SDK, you must authenticate with a client ID and secret. To make API calls, you’ll also need a customer token. Set these as environment variables.
+
+    export UBER_DIRECT_CLIENT_ID=your_client_id
+    export UBER_DIRECT_CLIENT_SECRET=your_client_secret
+    export UBER_DIRECT_CUSTOMER_ID=your_customer_token
+
+#### ¶ Authentication
+
+To authenticate with the Uber API, use your client ID and client secret that you have set in your environment variable file to obtain an access token. Here is an example of how to do this:
+
+    import { getAccessToken } from "uber-direct/auth";
+
+    getAccessToken()
+      .then((token) => console.log(`Your access token is: ${token}`))
+      .catch((error) =>
+        console.error(`Error fetching access token: ${error.message}`)
+      );
+
+#### ¶ Making API Calls
+
+Here are examples of how to make API calls using the Uber JS SDK.
+
+More examples in [Github Samples Repository](https://github.com/uber/uber-direct-sdk-samples)
+
+##### ¶ Getting a Delivery Quote
+
+    import { getAccessToken } from 'uber-direct/auth';
+    import { createDeliveriesClient } from "uber-direct/deliveries";
+
+    const token = await getAccessToken();
+    const deliveriesClient = createDeliveriesClient(token);
+
+    const quoteReq = {
+      pickup_address: "{\"street_address\":[\"100 Maiden Ln\"],\"city\":\"New York\",\"state\":\"NY\",\"zip_code\":\"10023\",\"country\":\"US\"}",
+      dropoff_address: "{\"street_address\":[\"30 Lincoln Center Plaza\"],\"city\":\"New York\",\"state\":\"NY\",\"zip_code\":\"10023\",\"country\":\"US\"}",
+    };
+    const quote = await deliveriesClient.createQuote(quoteReq);
+
+##### ¶ Creating a Delivery
+
+    import { getAccessToken } from 'uber-direct/auth';
+    import { createDeliveriesClient } from "uber-direct/deliveries";
+
+    const token = await getAccessToken();
+    const deliveriesClient = createDeliveriesClient(token);
+
+    const deliveryRequest = {
+      pickup_name: 'Store Name',
+      pickup_address: "{\"street_address\":[\"100 Maiden Ln\"],\"city\":\"New York\",\"state\":\"NY\",\"zip_code\":\"10023\",\"country\":\"US\"}",
+      pickup_phone_number: '+14155551212',
+      dropoff_name: 'Customer Name',
+      dropoff_address: "{\"street_address\":[\"30 Lincoln Center Plaza\"],\"city\":\"New York\",\"state\":\"NY\",\"zip_code\":\"10023\",\"country\":\"US\"}",
+      dropoff_phone_number: '+14155551212',
+      manifest_items: [
+        {
+          name: 'Thing 1',
+          quantity: 1,
+          size: 'small',
+          price: 1000
+        },
+      ]
+    };
+    const delivery = await deliveriesClient.createDelivery(deliveryRequest);
+
+##### ¶ Support
+
+If you find a bug in the code that needs to be fix or you want to do a feature request to be included in the SDK you can do it in this form:
+
+Getting StartedRequirementsUber Direct AccountNodeInstallationSet Environment VariablesAuthenticationMaking API CallsGetting a Delivery QuoteCreating a DeliverySupport
+
+#### [UberDevelopers](/)
+
+[Docs](/docs)
+
+© 2025 Uber Technologies Inc.
+
+[Privacy](https://www.uber.com/legal/en/document/?name=privacy-notice&country=great-britain&lang=en)[Accessibility](https://www.uber.com/gb/en/about/accessibility/?uclick_id=df42c37d-25d9-41ca-930e-8e06976d1d88)[Terms](https://www.uber.com/legal/document/?name=general-terms-of-use&uclick_id=df42c37d-25d9-41ca-930e-8e06976d1d88)
+
+## Uber Developers
+
+### [UberDevelopers](/)
+
+[Docs](/docs)
+
+Search
+
+[Sign in](/dashboard)
+
+ __
+
+#### [UberDevelopers](/)
+
+[Docs](/docs)
+
+© 2025 Uber Technologies Inc.
+
+[Privacy](https://www.uber.com/legal/en/document/?name=privacy-notice&country=great-britain&lang=en)[Accessibility](https://www.uber.com/gb/en/about/accessibility/?uclick_id=df42c37d-25d9-41ca-930e-8e06976d1d88)[Terms](https://www.uber.com/legal/document/?name=general-terms-of-use&uclick_id=df42c37d-25d9-41ca-930e-8e06976d1d88)
+
+## Uber Developers
+
+### [UberDevelopers](/)
+
+[Docs](/docs)
+
+Search
+
+[Sign in](/dashboard)
+
+## Authentication
+
+To access the Direct API, you will need a valid access token from our OAuth service. All calls to `https://api.uber.com/` leverage OAuth 2.0 with the `client_credentials` grant type.
+
+OAuth2.0 specification is outlined in [RFC 6479](https://tools.ietf.org/html/rfc6749)
+
+### ¶ Get an Access Token
+
+To generate an access token, retrieve your application’s `client_id` and `client_secret` from the [Direct Dashboard](https://direct.uber.com/).
+
+#### ¶ Authentication Request
+
+The authentication endpoint expects requests to be encoded as `application/x-www-form-urlencoded` or `multipart/form-data`
+
+**Header Type #1:** `application/x-www-form-urlencoded`
+
+    curl --request POST 'https://auth.uber.com/oauth/v2/token' \
+    --header 'Content-Type: application/x-www-form-urlencoded' \
+    --data-urlencode 'client_id=' \
+    --data-urlencode 'client_secret=' \
+    --data-urlencode 'grant_type=client_credentials' \
+    --data-urlencode 'scope=eats.deliveries'
+
+**Header Type #2:** `multipart/form-data`
+
+    curl --request POST 'https://auth.uber.com/oauth/v2/token' \
+    --header 'Content-Type: multipart/form-data' \
+    --form 'client_id=""' \
+    --form 'client_secret=""' \
+    --form 'grant_type="client_credentials"' \
+    --form 'scope="eats.deliveries"'
+
+Parameter | Description
+---|---
+`client_id` | The Client ID of your application, retrieved from the Direct Dashboard.
+`client_secret` | The Client Secret of your application. This should be treated like your application password.
+`grant_type` | To access the Uber Direct API, authenticate your application by setting this to the `client_credentials` grant type. This will create an OAuth 2.0 access token with the specified scope.
+`scope` | Specifies the Uber developer endpoints that this token has access to. For Direct APIs, the scope will always be: `eats.deliveries`. For Org APIs, the scope will always be: `direct.organizations`
+
+##### ¶ Authentication Response
+
+    {
+      "access_token": "",
+      "expires_in": 2592000,
+      "token_type": "Bearer",
+      "scope": "eats.deliveries"
+    }
+
+The `access_token` field will contain the token used to authenticate against the Uber Direct APIs.
+
+The `expires_in` field indicates the lifetime of the access token, provided in seconds. Tokens are valid for 30 days (2,592,000 seconds) and should be cached and re-used across requests until (or shortly before) expiration. It should **NOT** be re-generated per request. Existing tokens cannot be refreshed, but new tokens can be created as many times as needed.
+
+**Note: Client credential grant type requests will be rate limited to 100 requests per hour.**
+
+For examples on obtaining the access token using Node.js and Python, please refer to the following resources:
+
+###### ¶ Example Node.js
+
+    var request = require('request');
+
+    // Set the API endpoint and request options
+    var options = {
+      method: 'POST',
+      url: 'https://auth.uber.com/oauth/v2/token',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      form: {
+        client_id: '', // Replace with your actual Client ID
+        client_secret: '', // Replace with your actual Client Secret
+        grant_type: 'client_credentials',
+        scope: 'eats.deliveries', // The scope of access required
+      },
+    };
+
+    // Send the request to Authorization API
+    request(options, function (error, response) {
+      if (error) throw new Error(error);
+      console.log(response.body); // Print the response body containing the access token
+    });
+
+###### ¶ Example Python
+
+    import requests
+
+    url = "https://auth.uber.com/oauth/v2/token"
+
+    # Set the payload with required parameters
+    payload = {
+        'client_id': '',         # Replace with your actual Client ID
+        'client_secret': '', # Replace with your actual Client Secret
+        'grant_type': 'client_credentials',
+        'scope': 'eats.deliveries',         # The scope of access required
+    }
+
+    headers = {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+
+    # Send the request to Authorization API
+    response = requests.post(url, headers=headers, data=payload)
+
+    print(response.text)  # Print the response text containing the access token
+
+###### ¶ Access Token Usage
+
+Pass the `access_token` returned in the previous step as a bearer token in the Authorization header of other Direct API endpoints.
+
+Note that all Direct endpoints besides Authentication (above) expect requests to be encoded as `application/json`. See below example in `curl` for Create Quote API:
+
+    curl --request POST 'https://api.uber.com/v1/customers//delivery_quotes' \
+    --header 'Content-Type: application/json' \
+    --header 'Authorization: Bearer ' \
+    --data-raw '{
+        "pickup_address": "{\"street_address\": [\"20 W 34th St\", \"Floor 2\"],\"state\":\"NY\",\"city\":\"New York\",\"zip_code\":\"10001\",\"country\":\"US\"}",
+      "dropoff_address": "{\"street_address\": [\"285 Fulton St\", \"\"],\"state\":\"NY\",\"city\":\"New York\",\"zip_code\":\"10006\",\"country\":\"US\"}"
+
+    }'
+
+Parameter | Description
+---|---
+`customer_id` | Unique 128-bits UUID for the organization. It can be found under the Developers tab in Direct Dashboard.
+`TOKEN` | The `access_token` returned in the previous step, used to authenticate against the Uber Direct APIs.
+
+###### ¶ Authentication Error Codes
+
+Parameter | Description
+---|---
+`invalid_request` | Required parameters were not provided.
+`invalid_client` | The client ID or secret provided is invalid.
+`invalid_scope` | The scope provided is invalid
+`server_error` | The server returned an unknown error.
+`unauthorized` | Invalid OAuth 2.0 credentials provided.
+
+Get an Access TokenAuthentication RequestAuthentication ResponseExample Node.js Example Python Access Token UsageAuthentication Error Codes
+
+#### [UberDevelopers](/)
+
+[Docs](/docs)
+
+© 2025 Uber Technologies Inc.
+
+[Privacy](https://www.uber.com/legal/en/document/?name=privacy-notice&country=great-britain&lang=en)[Accessibility](https://www.uber.com/gb/en/about/accessibility/?uclick_id=df42c37d-25d9-41ca-930e-8e06976d1d88)[Terms](https://www.uber.com/legal/document/?name=general-terms-of-use&uclick_id=df42c37d-25d9-41ca-930e-8e06976d1d88)
+
+## Uber Developers
+
+### [UberDevelopers](/)
+
+[Docs](/docs)
+
+Search
+
+[Sign in](/dashboard)
+
+## Webhooks Overview
+
+Uber Direct facilitates real-time delivery updates by notifying your application through Webhooks. This guide outlines the step-by-step process for setting up, receiving, authenticating, and processing these notifications.
+
+### ¶ Set Up the Webhooks Endpoint
+
+Webhook notifications are sent as POST requests from Uber Direct to an Internet endpoint that you specify. When your endpoints are up and listening, you can add the endpoint URLs via the Uber Direct Dashboard ([direct.uber.com](https://direct.uber.com/developer)).
+
+Please provide one or more URLs to Uber if you would like to receive Webhooks.
+
+  1. Click the Developer tab on the left, followed by the Webhooks tab.
+
+  2. Click Create Webhook.
+During this step, you have the opportunity to select the appropriate type of Webhook for each URL. For detailed explanations regarding the event.delivery_status and event.courier_update, please refer to the following resources:
+     * [event.delivery_status explanation](https://developer.uber.com/docs/deliveries/daas/references/api/webhooks/delivery-status-webhook)
+     * [event.courier_update explanation](https://developer.uber.com/docs/deliveries/daas/references/api/webhooks/courier-update-webhook)
+     * [event.refund explanation](https://developer.uber.com/docs/deliveries/daas/references/api/webhooks/refund-webhook)
+  3. Fill in the Webhook URL with your service endpoint.
+**IMPORTANT: For security concern, you’ll need to configure your own web application to accept HTTPS requests from us.**
+  4. Choose which Webhook(s) should be sent to this URL. You can use one URL for all Webhook types or a separate URL for each.
+  5. Click Save.
+
+#### ¶ Authenticating Webhooks
+
+Upon creating a Webhook, you will be provided with a dedicated **Webhook Signing Key**. This confidential key serves as a shared secret between your application and Uber, ensuring the authenticity and integrity of incoming messages to your Webhook endpoint.
+
+To obtain the signing key for a specific Webhook, navigate to the respective Webhook entry and click on the triple dots symbol. From the dropdown menu, select the “Edit” option.
+
+When a Webhook POST message is sent to your endpoint, it includes the header **x-uber-signature** , which is a SHA-256 hash of the message payload generated using the signing key. You can use the following steps to verify the Webhook message:
+
+  1. Compute the SHA-256 HASH of the message utilizing your designated signing key. It is recommended to employ a standard [HMAC](https://en.wikipedia.org/wiki/HMAC) function provided by your programming language.
+  2. Validate the checksum by comparing it to the hash value present in the **x-uber-signature** header. If the checksum matches the hash value, proceed with processing the message as intended. Otherwise, ignore it.
+
+It is crucial to ensure the integrity and authenticity of the message by confirming the checksum validity before proceeding with any processing.
+
+Here is an example of a Python script that computes what the **x-uber-signature** should be, given a signing key and a message payload:
+
+    import hashlib, hmac
+
+    signing_key = 'c5c26d5a-70d6-46c7-a652-d7c09825ad29'
+
+    # Shortened for this example
+    payload = '{"kind": "event.courier_update", "location": {"lat": 37.7974109, "lng": -122.424145}}'
+
+    hmac.new(signing_key.encode('utf-8'), payload.encode('utf-8'), hashlib.sha256).hexdigest()
+
+    # → 'cdff8133fb065f8d37a2c1c94c3331b6a82766d14e7ea4faacc4886558cedd65'
+
+**IMPORTANT**
+
+  1. In the `Delivery Status Webhook` and `Courier Update Webhook`, you can use either **x-uber-signature** or **x-postmates-signature** for the above verification. However, for the `Refund Webhook`, please ensure you use **x-uber-signature** for verification.
+  2. **Avoid Unintended Character Conversion in JSON/String Parsing** :
+When handling the webhook’s body, please be aware that it might contain escape sequences for Unicode characters like \uXXXX. Ensure that your parsing methods maintain the original raw format. Some parsing functions may unintentionally convert escape sequences into their respective characters (e.g., \u0026 to &). Choose parsing methods or libraries that preserve the original format to prevent unexpected conversions. Testing with inputs containing escape sequences helps confirm the integrity of your parsing functions.
+
+#### ¶ Retry logic
+
+If Uber receives either of 500, 502, 503, 504 status codes, timeout or any network error, the webhook event will be retried. The first retry will be sent 10 seconds after the initial event. The following events will be resent based on an exponential backoff algorithm, starting at 30 seconds after the 10s retry, then again after 60 seconds, then after 120 seconds, and so on until a response is received or until 3 total events were sent without a response.
+
+If the the webhook is not received due to another status code, the recommendation is to use the Get Delivery endpoint to retrieve the data of the trip.
+
+Set Up the Webhooks EndpointAuthenticating WebhooksRetry logic
+
+#### [UberDevelopers](/)
+
+[Docs](/docs)
+
+© 2025 Uber Technologies Inc.
+
+[Privacy](https://www.uber.com/legal/en/document/?name=privacy-notice&country=great-britain&lang=en)[Accessibility](https://www.uber.com/gb/en/about/accessibility/?uclick_id=df42c37d-25d9-41ca-930e-8e06976d1d88)[Terms](https://www.uber.com/legal/document/?name=general-terms-of-use&uclick_id=df42c37d-25d9-41ca-930e-8e06976d1d88)
+
+## Uber Developers
+
+### [UberDevelopers](/)
+
+[Docs](/docs)
+
+Search
+
+[Sign in](/dashboard)
+
+## Delivery Window
+
+Delivery windows are time blocks with start and end times that Uber Direct use as guidance to ensure timely and fulfilled deliveries. These windows determine when we request couriers to fulfill the specified delivery orders. Delivery windows can be set using either the ASAP (As Soon As Possible) or Scheduled (Merchant-driven) methods. In the delivery process, two types of windows are essential:
+
+  * **Pickup Windows:** These specify the start and end times for when we want the courier to arrive at the pickup location.
+    * `pickup_ready_dt`: Beginning of the pickup window when an order is ready and must be picked up. Send this field when preparation time is known. Must be less than 30 days in the future.
+    * `pickup_deadline_dt`: End of the pickup window when an order may be picked up. Must be at least 10 mins later than `pickup_ready_dt` and at least 20 minutes in the future from now.
+  * **Drop Off Windows:** These specify the start and end times for when we want the courier to arrive at the drop-off location.
+    * `dropoff_ready_dt`: Beginning of the dropoff window when an order must be dropped off. Must be less than or equal to `pickup_deadline_dt`.
+    * `dropoff_deadline_dt`: End of the dropoff window when an order must be dropped off. Must be at least 20 mins later than `dropoff_ready_dt` and must be greater than or equal to `pickup_deadline_dt`.
+
+The availability of delivery options during checkout depends on the choices made by you and need to be set in the [Create Quote](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Quotes) and [Create Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery) API call. You can offer ASAP (As Soon As Possible) delivery, which can range from being as soon as 30 minutes after order placement to up to 30 days into the future (Scheduled Delivery).
+
+**Note:** Optimal delivery windows may vary depending on the use case of each merchant. Please ensure adequte testing to determine your optimal configuration.
+
+### ¶ ASAP
+
+| Description | Values
+---|---|---
+On Demand | Use when the items are packed and ready for immediate delivery. | Order Create: t0 (today)
+`pickup_ready_dt`: **Optional (if prep time required then t0 + prep time, otherwise leave blank)**
+`pickup_deadline_dt`: **Leave Blank**
+`dropoff_ready_dt`: **Leave Blank**
+`dropoff_deadline_dt`: **Leave Blank**
+
+**Guidance:**
+
+  * Drop Off expectation is = 90 minutes in the future from the order creation time.
+  * `dropoff_deadline_dt` should be set 2 hours before the carrier cutoff time for return-eligible trips.
+  * The above scenario depicts the `pickup_ready_dt` timestamp if you require prep time (staging, pick and pack).
+  * Scheduled date must be less than 30 days in the future.
+
+ASAPScheduled Delivery
+
+#### [UberDevelopers](/)
+
+[Docs](/docs)
+
+© 2025 Uber Technologies Inc.
+
+[Privacy](https://www.uber.com/legal/en/document/?name=privacy-notice&country=great-britain&lang=en)[Accessibility](https://www.uber.com/gb/en/about/accessibility/?uclick_id=df42c37d-25d9-41ca-930e-8e06976d1d88)[Terms](https://www.uber.com/legal/document/?name=general-terms-of-use&uclick_id=df42c37d-25d9-41ca-930e-8e06976d1d88)
+
+## Uber Developers
+
+### [UberDevelopers](/)
+
+[Docs](/docs)
+
+Search
+
+[Sign in](/dashboard)
+
+## Pincode
+
+Pincode verification is an optional method for courier dropoff that adds an extra layer of security. It requires the courier to obtain and enter a 4-digit pincode from the customer. Once the courier enters the correct pincode in the Driver App, the verification step is satisfied, and the courier can successfully complete the dropoff.
+
+Here are some important points to note about pincode verification:
+
+  * **Usage for Merchants** : Pincode verification can be applied if you have our SMS functionality enabled (or have the ability to send SMS/Push notification on your own).
+
+  * **Usage with Other Verification Methods** : Pincode verification can be used in conjunction with other verification methods like barcodes, signatures, sobriety check & photos.
+
+  * **Dropoff Only** : Pincode verification is applicable only during the dropoff process and cannot be used during pickup.
+
+  * **Not Compatible with Leave-at-Door** : The pincode verification cannot be used if the “Leave-at-Door” option is selected for the delivery.
+
+By leveraging pincode verification, delivery services can enhance security and ensure that the right package is handed over to the correct recipient.
+
+### ¶ Enabling Pincode Verification
+
+To enable pincode verification for a delivery, you need to include the following `pincode` object in the request body of the [Create Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery) API:
+
+    {
+      "dropoff_verification": {
+        "pincode": {
+          "enabled": true
+        }
+      }
+    }
+
+When pincode verification is enabled, all API responses (i.e [Create Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery) API response, [Get Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery/paths/~1%7Bcustomer_id%7D~1deliveries~1%7Bdelivery_id%7D/get) API response & [Update Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery/paths/~1%7Bcustomer_id%7D~1deliveries~1%7Bdelivery_id%7D/post) API response) will contain the following object:
+
+    {
+      "verification_requirements": {
+        "pincode": {
+          "value": "6066",
+          "enabled": true
+        }
+      }
+    }
+
+For deliveries with pincode verification, all Delivery Status Webhook events will include the following object in the response body:
+
+    {
+      "verification_requirements": {
+        "pincode": {
+          "enabled": true,
+          "value": "6066"
+        }
+      }
+    }
+
+In summary, by adding the `pincode` object with the `enabled` set to `true`, you activate pincode verification for the delivery, and the response will provide the necessary information about the verification requirements.
+
+### ¶ Pincode SMS to Customer
+
+When the delivery is created, the customer receives their pincode via SMS:
+
+Event | SMS
+---|---
+Start of Pickup Window | Your PIN is 6066. Do not share your PIN with others, only you can provide the PIN to receive your order.
+Courier On Route | It’s on the way! Your delivery person Jerick S. has your order. Tell them your PIN is 6066 to confirm the delivery.
+Courier Arriving | Your order is arriving now. Get ready to meet Jerick S. at the door. Tell them your PIN is 6066 to confirm the delivery.
+Delivery Completed | Delivered! Your order from Test Account 2000 Ocean Ave TEST has been delivered.
+
+The courier flow for pincode verification:
+
+### ¶ FAQ for Pincode
+
+**Are the couriers made aware of how pincode verification works?**
+
+Yes, a `How a PIN works` guide is provided for deliveries with pincode verification.
+
+**What happens if a customer is unable to provide the pincode or is not present at the time of dropoff?**
+
+The courier is instructed to go to the `I need help` section or contact support to report the issue.
+
+**Can you modify an active delivery to remove pincode verification?**
+
+Currently, you cannot remove pincode verification once the delivery has been created.
+
+Enabling Pincode VerificationPincode SMS to CustomerFAQ for Pincode
+
+#### [UberDevelopers](/)
+
+[Docs](/docs)
+
+© 2025 Uber Technologies Inc.
+
+[Privacy](https://www.uber.com/legal/en/document/?name=privacy-notice&country=great-britain&lang=en)[Accessibility](https://www.uber.com/gb/en/about/accessibility/?uclick_id=df42c37d-25d9-41ca-930e-8e06976d1d88)[Terms](https://www.uber.com/legal/document/?name=general-terms-of-use&uclick_id=df42c37d-25d9-41ca-930e-8e06976d1d88)
+
+## Uber Developers
+
+### [UberDevelopers](/)
+
+[Docs](/docs)
+
+Search
+
+[Sign in](/dashboard)
+
+## Proof of Delivery
+
+The Uber Direct supports Proof of Delivery verification for trips that necessitate couriers to undertake additional steps to ensure successful pickup, delivery, or return of packages.
+
+Verification options encompass the following:
+
+  * Signature
+  * Barcodes
+  * Picture
+  * Identification
+  * Pincode (Please refer to [Pincode](https://developer.uber.com/docs/deliveries/guides/pincode) for more detail)
+
+These verification methods allow for robust confirmation and validation of the delivery process.
+
+### ¶ Enabling Verification
+
+To enhance the delivery process, you have the option to incorporate verification steps for pickup, delivery, and return by specifying the corresponding parameters: `pickup_verification`, `dropoff_verification`, or `return_verification`. It is important to note that the JSON structure for these three verification remains consistent. For the purposes of the following example, we will focus on the `dropoff_verification` parameter.
+
+#### ¶ Signature
+
+In the following example, the courier is prompted to collect the recipient’s signature and name. However, it does not require the collection of the relationship between the signer and the recipient.
+
+    "dropoff_verification": {
+      "signature_requirement": {
+        "enabled": true,
+        "collect_signer_name": true,
+        "collect_signer_relationship": false
+      }
+    }
+
+You can retrieve the signature verification image using the [Proof of Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery/paths/~1customers~1%7Bcustomer_id%7D~1deliveries~1%7Bdelivery_id%7D~1proof-of-delivery/post) API call. Please note that the images are retained for 30 days.
+
+##### ¶ Barcodes
+
+Barcode is a Proof of Delivery method that requires the courier to scan a barcode at the dropoff or pickup to verify that they are picking up or dropping off the correct items.
+
+**IMPORTANT**
+
+  1. Orders can have multiple barcodes.
+  2. Barcode is available at pickup, dropoff, and return.
+  3. Barcode value can be updated using the [Update Delivery API](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery/paths/~1%7Bcustomer_id%7D~1deliveries~1%7Bdelivery_id%7D/post) after the delivery is created:
+     * Pickup verification barcode value can only be updated prior to `courier_imminent` (i.e., before courier is one minute away from pickup location).
+     * Dropoff verification barcode value can only be updated prior to `courier_imminent` (i.e., before courier is one minute away from dropoff location).
+
+    "dropoff_verification": {
+      "barcodes": [
+        {
+          "value": "W1129082649-1",
+          "type": "CODE39"
+        }
+      ]
+    }
+
+##### ¶ Picture
+
+Enabling the picture feature requires couriers to take a photo of the order at the delivery point as evidence of successful delivery.
+
+**IMPORTANT**
+
+  1. Picture is automatically enabled for deliveries with Leave at Door as the handoff option.*
+  2. It is the merchant’s responsibility to surface the photo to the customer on their own app.
+  3. The photo is (i) accessible through the Dashboard and (ii) the URL returned via the API.
+  4. The photo images are retained in the Direct Dashboard for 7 days and available for 30 days through the API via a [GET Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery/paths/~1%7Bcustomer_id%7D~1deliveries~1%7Bdelivery_id%7D/get) call
+
+  * We do not recommend enabling picture for Meet at Door deliveries as it creates an unintuitive experience for couriers and customers.
+
+    "dropoff_verification": {
+      "picture": true
+    }
+
+You can utilize the [Proof of Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery/paths/~1customers~1%7Bcustomer_id%7D~1deliveries~1%7Bdelivery_id%7D~1proof-of-delivery/post) API call to retrieve the picture verification image as below:
+
+##### ¶ Identification
+
+Identification is a visual record that confirms the identity of the recipient who received a package. We require the courier to take a photo of the order recipient’s government-issued photo ID (such as a driver’s license or passport) at the point of delivery. This can serve as evidence that the package was delivered to the correct person, that the person is of legal age (for restricted items), and can help to prevent theft or fraud.
+
+**IMPORTANT**
+
+  1. Identification verification is required for restricted items. **Restricted items** encompass products like alcohol, tobacco, and prescription medications that have specific delivery regulations or restrictions. These limitations may be due to safety considerations or legal mandates.
+  2. Identification is available only at dropoff (except for Leave at Door), and it is not applied for return trips. Orders containing this Proof of Delivery (POD) requirement are automatically flagged with “contains alcohol,” with Sobriety check enabled by default.
+  3. If a courier is unable to complete the ID check, a return trip will be initiated.
+
+    "dropoff_verification": {
+      "identification": {
+        "min_age": 18
+      }
+    }
+
+##### ¶ Combining Multiple Proof of Deliveries
+
+Verification options vary based on the use case. However, in all cases, selecting the appropriate option based on the vertical and items being delivered gives merchants confidence that the items will be delivered safely and securely.
+
+  * **Pickup Verification** : It is possible to use Barcode, Photo, and Signature.
+  * **Dropoff Verification** : It is possible to use ID Check, Barcode, Photo, Signature, and Pincode.
+
+Vertical | Common Pickup Verification | Common Dropoff Verification | Example Use Case
+---|---|---|---
+Liquor | Barcode OR Signature | ID Check | Legal Age Verification
+Grocery | Barcode OR Picture | Barcode OR Picture OR Pincode | Frequent order mixups
+Restaurant | Barcode OR Picture OR Signature | Barcode OR Picture | Frequent fraudulent activity
+Pharmacy | Barcode OR Picture OR Signature | ID Check OR Signature OR Pincode | Legal Age Verification or Identify Verification
+Retail | Barcode OR Picture OR Signature | Signature OR Pincode | High Value Shipments
+
+    "dropoff_verification": {
+      "picture": true,
+      "barcodes": [
+        {
+          "value": "W1129082649-1",
+          "type": "CODE39"
+        }
+      ],
+      "signature_requirement": {
+        "enabled": true,
+        "collect_signer_name": true,
+        "collect_signer_relationship": false
+      }
+    }
+
+### ¶ Example Response
+
+A delivery with dropoff verification will have the following object in the `CreateDelivery` and `GetDelivery` response body under `dropoff.verification_requirements` object:
+
+    "verification_requirements": {
+      "signature": true,
+      "barcodes": {
+        "value": "W1129082649-1",
+        "type": "CODE39"
+      },
+      "picture": true,
+      "signature_requirement": {
+        "enabled": true,
+        "collect_signer_name": true,
+        "collect_signer_relationship": false
+      }
+    }
+
+### ¶ Example Webhook
+
+For deliveries with dropoff verification, both the Delivery Status Webhook and Courier Update Webhook events will include the following object in the response body:
+
+    "verification_requirements": {
+      "signature": true,
+      "barcodes": {
+        "value": "W1129082649-1",
+        "type": "CODE39"
+      },
+      "picture": true,
+      "signature_requirement": {
+        "enabled": true,
+        "collect_signer_name": true,
+        "collect_signer_relationship": false
+      }
+    }
+
+After a delivery is completed successfully, the Webhook event “delivered” and GetDelivery response payload will have an external link as a reference to proof of delivery files. The response payload will have the following JSON under `dropoff.verification` object:
+
+    "verification": {
+      "picture": {
+        "image_url": ""
+      },
+      "barcodes": {
+        "value": "W1129082649-1",
+        "type": "CODE39",
+        "scan_result": {
+          "outcome": "SUCCESS",
+          "timestamp": "2023-07-06T22:50:29.092Z",
+        }
+      },
+      "signature_proof": {
+        "image_url": "",
+        "signer_name": "John Doe"
+      }
+    }
+
+Enabling VerificationSignatureBarcodesPictureIdentificationCombining Multiple Proof of DeliveriesExample ResponseExample Webhook
+
+#### [UberDevelopers](/)
+
+[Docs](/docs)
+
+© 2025 Uber Technologies Inc.
+
+[Privacy](https://www.uber.com/legal/en/document/?name=privacy-notice&country=great-britain&lang=en)[Accessibility](https://www.uber.com/gb/en/about/accessibility/?uclick_id=df42c37d-25d9-41ca-930e-8e06976d1d88)[Terms](https://www.uber.com/legal/document/?name=general-terms-of-use&uclick_id=df42c37d-25d9-41ca-930e-8e06976d1d88)
+
+## Uber Developers
+
+### [UberDevelopers](/)
+
+[Docs](/docs)
+
+Search
+
+[Sign in](/dashboard)
+
+## Automated Delivery Testing
+
+### ¶ Robocourier is an automated delivery testing tool
+
+Robo Courier is a dedicated test automation tool built specifically for Uber Direct. With Robo Courier, you can automate the simulation of various delivery statuses at predefined intervals after placing an order. This invaluable tool empowers you to conduct thorough testing and meticulous validation of your integrations with Uber Direct.
+
+This feature should not be used for stress testing.
+
+#### ¶ Enabling Robo Courier
+
+To have the Robo Courier automatically deliver your test order, include the following `test_specifications` object in the JSON data you POST to [Create Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery):
+
+    "test_specifications": {
+        "robo_courier_specification": {
+            "mode": "auto"
+        }
+    }
+
+Robo Courier mimics the behavior of a real world courier. When the `auto` variable is specified in the `test_specifications` object, the Robo Courier will deploy on the following schedule:
+
+Event | Description | Example order placed at 1pm
+---|---|---
+Courier assignment | A courier is assigned to the order immediately when no pickup window (consists of `pickup_ready_dt` and `pickup_deadline_dt`) nor dropoff window (consists of `dropoff_ready_dt` and `dropoff_deadline_dt`) is set | 1:00:00pm
+Courier is enroute | A courier is on route to the order **30 seconds** after assignment | 1:00:30pm
+Pickup is imminent | The courier is close to picking up the order **30 seconds** after the courier is enroute | 1:01:00pm
+Courier picks up | The courier pickups up the order **30 seconds** after pickup is imminent | 1:01:30pm
+Dropoff is imminent | The courier is close to dropping off the order **30 seconds** after the courier pickups up the order | 1:02:00pm
+Courier drops off | The courier drop offs the order **30 seconds** after dropoff is imminent | 1:02:30pm
+
+**Note:** If only `pickup_ready_dt` (i.e. pickup ready time) is set, the courier will be assigned at that given time. If only `dropoff_ready_dt` (i.e. dropoff ready time is set, the courier will be assigned 10 minutes before the dropoff window opens.
+
+Any verification requirements specified by the delivery (e.g. signature capture, photo capture, identification verification, pincode verification, barcode scanning, sobriety check) will be completed successfully by the Robo Courier, both at pickup and dropoff. Webhooks will be sent normally as the pickup and dropoff occurs and will contain information reflecting the completed verification requirements.
+
+If you want to set up various time-based testing scenarios, you can do so by setting the Robo Courier mode to `custom`:
+
+    "test_specifications": {
+        "robo_courier_specification": {
+            "mode": "custom",
+            "enroute_for_pickup_at": "2023-07-06T05:05:01Z",
+            "pickup_imminent_at": "2023-07-06T05:06:03Z",
+            "pickup_at": "2023-07-06T05:07:01Z",
+            "dropoff_imminent_at": "2023-07-06T05:08:01Z",
+            "dropoff_at": "2023-07-06T05:08:01Z"
+        }
+    }
+
+For each event, you can specify the exact timestamp for when it will occur. All fields shown in the above code snippet are required in `custom` mode.
+
+Field | Timestamp restrictions
+---|---
+`enroute_for_pickup_at` | If a pickup window is specified, it must occur within the pickup window. Else, must occur within 30 minutes of the order being placed
+`dropoff_at` | Must be within 8 hours of pickup time
+
+#### ¶ Create Delivery with Robo Courier - Payload example:
+
+    {
+        "pickup_name": "Store Name",
+        "pickup_address": "100 Maiden Ln, New York, NY 10038",
+        "pickup_phone_number": "+15555555555",
+        "dropoff_name": "Gordon Shumway",
+        "dropoff_address": "30 Lincoln Center Plaza, New York, NY 10023",
+        "dropoff_phone_number": "+15555555555",
+        "manifest_items": [
+            {
+                "name": "Test",
+                "quantity": 1,
+                "size": "small"
+            }
+        ],
+        "pickup_business_name": "Store Name",
+        "pickup_latitude": 40.7066745,
+        "pickup_longitude": -74.0071976,
+        "pickup_notes": "Follow big green 'Pickup' signs in the parking lot",
+        "pickup_verification": {
+            "picture": true
+        },
+        "dropoff_business_name": "House of Luciano",
+        "dropoff_latitude": 40.7727076,
+        "dropoff_longitude": -73.9839082,
+        "dropoff_notes": "Second floor, black door to the right.",
+        "dropoff_seller_notes": "Fragile content - please handle the box with care during delivery.",
+        "dropoff_verification": {
+            "signature": true
+        },
+        "deliverable_action": "deliverable_action_meet_at_door",
+        "manifest_reference": "REF0000002",
+        "manifest_total_value": 1000,
+        "undeliverable_action": "return",
+        "requires_dropoff_signature": true,
+        "requires_id": true,
+        "tip": 500,
+        "idempotency_key": "1234567890",
+        "external_store_id": "my_store_123",
+        "return_verification": {
+            "signature": true,
+            "picture": true
+        },
+        "external_id": "string",
+        "test_specifications": {
+            "robo_courier_specification": {
+                "mode": "auto"
+            }
+        }
+    }
+
+#### ¶ Robo Courier - Webhook Example:
+
+    {
+      "account_id": "",
+      "batch_id": "bat_3dYyXMxOW1qBNrLyqMVkUg",
+      "created": "2023-08-02T14:18:21.6Z",
+      "customer_id": "d80aa06f-11b5-5f8a-8d4b-601799678a42",
+      "data": {
+        "batch_id": "bat_3dYyXMxOW1qBNrLyqMVkUg",
+        "complete": false,
+        "courier": {
+          "img_href": "https://d1w2poirtb3as9.cloudfront.net/default.jpeg?Expires=1691029043&Signature=N~tBRp875yYALgox5AO-jkEaIQ6V-9Nq4XCJ1PH3x4l422Q0iGUeGUcK6a4MBHotxpDL~qIhDb7yqVAjosNPMK7vN~~RMCVxxYdyqNdEWBoSdkBTUDTH3XZtHaf6sZK6y8KpoUoDBmCIt3VxLmTEdxuvkPg0XVk90m-yvfBHDxyg-V4x8vUBKoqssAXOIQ~eLz2bzOH2yQFm-1gkBRS28-JT99Q-~yV4Xd1L-g3D2vYlim~1isF21vH7~LaWenhd~iDAezHfG2JZhiP0dl8KOY8FMV8rgTtyBH5~HOG-Qa0gXvBhtexgVNewRxrIUkPCvE3-J7cxVY-9xcBVtza6NQ__&Key-Pair-Id=K36LFL06Z5BT10",
+          "location": {
+            "lat": 40.706913,
+            "lng": -74.00695
+          },
+          "location_description": "",
+          "name": "Alex I.",
+          "phone_number": "+19294164877",
+          "rating": "5.00",
+          "vehicle_color": "white",
+          "vehicle_make": "Toyota",
+          "vehicle_model": "Prius",
+          "vehicle_type": "car"
+        },
+        "courier_imminent": false,
+        "created": "2023-08-02T14:16:48.067Z",
+        "currency": "usd",
+        "deliverable_action": "deliverable_action_meet_at_door",
+        "dropoff": {
+          "address": "30 Lincoln Center Plaza, New York, NY 10023",
+          "detailed_address": {
+            "city": "New York",
+            "country": "US",
+            "state": "",
+            "street_address_1": "30 Lincoln Center Plaza",
+            "street_address_2": "",
+            "zip_code": "10023"
+          },
+          "location": {
+            "lat": 40.77271,
+            "lng": -73.98391
+          },
+          "name": "Gordon S.",
+          "notes": "Second floor, black door to the right.",
+          "phone_number": "+15555555555",
+          "verification": {
+            "identification": {
+              "min_age_verified": false
+            },
+            "signature": {
+              "image_url": ""
+            }
+          },
+          "verification_requirements": {
+            "identification": {
+              "min_age": 21
+            },
+            "signature": true,
+            "signatureRequirement": {
+              "collect_signer_name": false,
+              "collect_signer_relationship": false,
+              "enabled": true
+            }
+          }
+        },
+        "dropoff_deadline": "2023-08-02T16:03:22Z",
+        "dropoff_eta": "2023-08-02T15:20:00.03Z",
+        "dropoff_ready": "2023-08-02T14:16:48Z",
+        "external_id": "string",
+        "fee": 2134,
+        "id": "del_CvvPBsW_RVSFPdk74cD6Pg",
+        "kind": "delivery",
+        "live_mode": false,
+        "manifest": {
+          "description": "1 X Test\n",
+          "reference": "REF0000002",
+          "total_value": 1000
+        },
+        "manifest_items": [
+          {
+            "dimensions": {
+              "depth": 15,
+              "height": 7,
+              "length": 20
+            },
+            "must_be_upright": false,
+            "name": "Test",
+            "price": 0,
+            "quantity": 1,
+            "size": "small"
+          }
+        ],
+        "pickup": {
+          "address": "100 Maiden Ln, New York, NY 10038-0001, US",
+          "detailed_address": {
+            "city": "New York",
+            "country": "US",
+            "state": "NY",
+            "street_address_1": "100 Maiden Ln",
+            "street_address_2": "",
+            "zip_code": "10038-0001"
+          },
+          "external_store_id": "my_store_123",
+          "location": {
+            "lat": 40.706673,
+            "lng": -74.007195
+          },
+          "name": "Store Name",
+          "notes": "Follow big green 'Pickup' signs in the parking lot",
+          "phone_number": "+15555555555",
+          "status": "completed",
+          "status_timestamp": "2023-08-02T14:18:21.447Z",
+          "verification": {
+            "picture": {
+              "image_url": "https://tb-static.uber.com/prod/file-upload/uploads/courier-task-platform/82a0d88e-100d-40d6-a0d0-ea9c4a2e55bb"
+            }
+          },
+          "verification_requirements": {
+            "picture": true
+          }
+        },
+        "pickup_action": "default",
+        "pickup_deadline": "2023-08-02T14:36:48Z",
+        "pickup_eta": "2023-08-02T14:18:21.447Z",
+        "pickup_ready": "2023-08-02T14:16:48Z",
+        "quote_id": "dqt_CvvPBsW_RVSFPdk74cD6Pg",
+        "route_id": "rte_7mVtgY_rQOeHGgCjHqd2mg",
+        "status": "dropoff",
+        "tip": 500,
+        "tracking_url": "https://www.ubereats.com/orders/0afbcf06-c5bf-4554-853d-d93be1c0fa3e",
+        "undeliverable_action": "",
+        "undeliverable_reason": "",
+        "updated": "2023-08-02T14:18:21.447Z",
+        "uuid": "0AFBCF06C5BF4554853DD93BE1C0FA3E"
+      },
+      "delivery_id": "del_CvvPBsW_RVSFPdk74cD6Pg",
+      "developer_id": "",
+      "id": "evt_py0BffftR_SmwvAlpSnGjg",
+      "kind": "event.delivery_status",
+      "live_mode": false,
+      "route_id": "rte_7mVtgY_rQOeHGgCjHqd2mg",
+      "status": "dropoff"
+    }
+
+#### ¶ Cancellation reasons
+
+The Robo Courier can also simulate delivery cancellation scenarios:
+
+    "test_specifications": {
+        "robo_courier_specification": {
+            "mode": "auto",
+            "cancel_reason": "cannot_access_customer_location"
+        }
+    }
+
+Possible values for `cancel_reason`:
+
+  * `cannot_access_customer_location`
+  * `cannot_find_customer_address`
+  * `customer_rejected_order`
+  * `customer_unavailable`
+
+When the Robo Courier navigates close to the dropoff location, you will receive a delivery status Webhook indicating `courier_imminent`. Then, the courier will cancel the order using the reason code specified above. You will receive a delivery status Webhook indicating cancellation.
+
+The `cancellation_reason` field in the Webhook will be populated with the reason code specified. No dropoff verification actions (e.g. ID verification, signature) will be performed.
+
+#### ¶ Undeliverable actions
+
+When you initially call [Create Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery), you can specify the `undeliverable_action` the courier should take if the order is canceled:
+
+**Undeliverable Action** | **Description of Behavior**
+---|---
+`leave_at_door` | Courier leaves delivery at door.
+`return` | Courier returns delivery to store. A return trip is created automatically and assigned to that courier. The courier will return the item(s) to the pickup address. You will receive additional webhook notifications for tracking the return trip.
+
+If you do not specify an `undeliverable_action` in your [Create Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery) request, the default action is to `return`.
+
+When you receive the cancellation webhook, this value will be sent back to you. It includes the `undeliverable_action` field, which will be populated with the value you specified (or left blank if you omitted it).
+
+#### ¶ FAQ for Robo Courier
+
+**Does the Robo Courier follow a real route from the Pickup location to the Dropoff location?**
+
+No, the Robo Courier does not navigate street-by-street from Pickup to Dropoff. Instead, it “teleports”:
+
+  * When the order is received, the Robo Courier appear at a randomly selected location near the pickup address, so it can take the delivery.
+  * When the `pickup_imminent` time hits, the courier is directly placed at the pickup address.
+  * When the `dropoff_imminent` time hits, the courier is directly placed at the dropoff address.
+
+**Do we only get`delivery_status` events for test deliveries using Robo Courier, or do we get `courier_update` webhook events as well?**
+
+You will receive both types of events as long as you are subscribed to them. However, for `courer_update` events, the courier lat/long locations will be fixed to one of the three locations mentioned above (first random location, pickup location, or dropoff location).
+
+**Are there any other known limitations to the Robo Courier?**
+
+  * No support for Parking Bay Check-in (the `courier_check_in` delivery status event)
+  * No batching (having a single Robo Courier pickup/dropoff multiple orders at a time)
+
+**Can I still do manual testing (via the Driver app)?**
+
+  * Yes, Robo Courier will only be triggered when the `test_specifications` attribute is sent in a [Create Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery) request. If you want to manually test a delivery, omit this attribute from your request.
+
+Robocourier is an automated delivery testing toolEnabling Robo CourierCreate Delivery with Robo Courier - Payload example:Robo Courier - Webhook Example:Cancellation reasonsUndeliverable actionsFAQ for Robo Courier
+
+#### [UberDevelopers](/)
+
+[Docs](/docs)
+
+© 2025 Uber Technologies Inc.
+
+[Privacy](https://www.uber.com/legal/en/document/?name=privacy-notice&country=great-britain&lang=en)[Accessibility](https://www.uber.com/gb/en/about/accessibility/?uclick_id=df42c37d-25d9-41ca-930e-8e06976d1d88)[Terms](https://www.uber.com/legal/document/?name=general-terms-of-use&uclick_id=df42c37d-25d9-41ca-930e-8e06976d1d88)
+
+## Uber Developers
+
+### [UberDevelopers](/)
+
+[Docs](/docs)
+
+Search
+
+[Sign in](/dashboard)
+
+## Geocoding
+
+Geocoding is the process of converting addresses or place names into geographic coordinates (latitude and longitude) that Uber Direct uses to accurately locate stores and drop-off locations. Proper geocoding ensures efficient routing, minimizes delivery errors, and improves the overall fulfillment experience. Uber Direct supports geocoding through both precise latitude/longitude inputs and structured address strings. To optimize delivery operations, accurate geocoding is essential at two key stages:
+
+### ¶ Store Creation / Pick-Up Experience
+
+Uber Direct relies on accurate geocoding for store creation and pick-up experiences to support seamless order fulfillment
+
+#### ¶ Drop-Off Experience
+
+Uber always geocodes the provided dropoff address, even when dropoff latitude and longitude are included, to help minimize delivery errors and optimize routing.
+
+##### ¶ Recommendations
+
+  * Use `external_store_id` to ensure a persistent, one-to-one store mapping between the merchant’s system and Uber. This enables accurate store identification.
+  * If `lat/lng` is provided in the API request, ensure accuracy, as Uber:
+    * Uses it to create store PINs.
+    * Looks up existing stores.
+  * If only address strings are included in the API request:
+    * Ensure they are correctly structured to prevent geocoding errors.
+    * Refer to the FAQ for more details.
+
+###### ¶ Support
+
+  * If a store location (address or `lat/lng` PIN) is incorrect, contact Uber Support to request an update.
+  * For multiple stores in the same building:
+    * Work with Uber Support to enable the required internal configuration.
+    * Each store must have a unique `external_store_id` along with this configuration.
+  * Dropoff addresses are geocoded by Uber. If the merchant prefers to use their own `lat/lng`, contact Uber Support to modify this behavior.
+  * Geocoding can be enabled or disabled upon request.
+
+Store Creation / Pick-Up ExperienceDrop-Off ExperienceRecommendationsSupport
+
+#### [UberDevelopers](/)
+
+[Docs](/docs)
+
+© 2025 Uber Technologies Inc.
+
+[Privacy](https://www.uber.com/legal/en/document/?name=privacy-notice&country=great-britain&lang=en)[Accessibility](https://www.uber.com/gb/en/about/accessibility/?uclick_id=df42c37d-25d9-41ca-930e-8e06976d1d88)[Terms](https://www.uber.com/legal/document/?name=general-terms-of-use&uclick_id=df42c37d-25d9-41ca-930e-8e06976d1d88)
+
+## Uber Developers
+
+### [UberDevelopers](/)
+
+[Docs](/docs)
+
+Search
+
+[Sign in](/dashboard)
+
+## FAQ
+
+### ¶ What is Uber Direct?
+
+Uber Direct empowers our merchants to provide on-demand (ASAP) and scheduled delivery services. To accomplish this, we utilize a range of features that facilitate effective delivery management and enable merchants to customize delivery options to align with their unique business requirements. By leveraging Uber Direct, you can now easily automate the process of dispatching an Uber courier for pick-up and deliveries.
+
+#### ¶ Do you have rate limits?
+
+Our rate limits differ across different endpoints. If you exceed the allowed number of requests within a specific timeframe, you will receive a 429 customer_limited response. If you encounter rate limiting due to intentional usage scenarios, we recommend reaching out to your Account Manager for further assistance.
+
+##### ¶ What’s the difference between “Client ID”, “Customer ID”, and “Client Secret”?
+
+The Client ID and Client Secret remain consistent across the account and are applicable to all organizations, customer IDs, and locations. However, it is important to note that the Customer ID utilized with the API will vary depending on the configured organizational structure. This aspect requires thorough discussion and finalization with the Account Manager or Uber Direct Point of Contact prior to the go-live phase.
+
+###### ¶ How long is the generated Quote & quote_id valid for?
+
+15 minutes.
+
+###### ¶ What’s the difference between the Delivery status and Courier Update Webhook
+
+  * Delivery Status Webhook: A static Webhook triggered at specific delivery stages, including `courier_imminent` changes. Please refer to [Delivery Status Webhook](https://developer.uber.com/docs/deliveries/daas/references/api/webhooks/delivery-status-webhook) for more details.
+
+  * Courier Update Webhook: A dynamic Webhook, fired every 20 seconds providing updated coordinates on the courier’s location. Please refer to [Courier Update Webhook](https://developer.uber.com/docs/deliveries/daas/references/api/webhooks/courier-update-webhook) for more details.
+
+For both webhooks, please be aware that `courier_imminent` = true indicates that the courier is within approximately 80 meters of the pickup/dropoff location.
+
+###### ¶ What are the address best practices?
+
+  * Structured vs non-structured address
+Our platform supports two types of address formats: non-structured addresses and structured addresses. While both formats are accepted, **we highly recommend utilizing structured address formats** to ensure enhanced accuracy and validation in the delivery process. Ensure apartment or unit numbers are added as a separate value in the street address structure.
+
+Structured Address:
+
+        {
+          "dropoff_address": "{\"street_address\":[\"1515 3rd St\",\"Apt. 5\"],\"city\":\"San Francisco\",\"state\":\"CA\",\"zip_code\":\"94158\",\"country\":\"US\"}"
+        }
+
+Non-Structured Address:
+
+        {
+          "dropoff_address": "1515 3rd St, San Francisco, CA 94158"
+        }
+
+  * Latitude and Longitude
+It’s recommended that any requests made to Uber contain a valid and accurate latitude and longitude.
+**IMPORTANT** : By default, if the provided lat/long is more than 1 km away from the address, we will overwrite it with the data returned by our backend Geocoding.
+
+  * Consistent Address Format Recommendation
+To ensure a smooth integration experience, we highly recommend using the same address format (either structured or unstructured) when submitting a drop-off address in both quote and create delivery requests. Using different formats may lead to varied geocoding results, potentially triggering a “delivery location changed” error within the system.
+
+**Example:**
+
+**Incorrect**
+
+        - Quote Request: "dropoff_address": "190 Mathilda Pl, Sunnyvale, CA 94086"
+          - Create Delivery Request: "dropoff_address": "{\"street_address\":[\"190 Mathilda Pl\",\"\"],\"city\":\"Sunnyvale\",\"state\":\"CA\",\"zip_code\":\"94086\"}"
+
+**Correct: Structured address**
+
+        - Quote Request: "dropoff_address": "{\"street_address\":[\"190 Mathilda Pl\"],\"city\":\"Sunnyvale\",\"state\":\"CA\",\"zip_code\":\"94086\"}"
+          - Create Delivery Request: "dropoff_address": "{\"street_address\":[\"190 Mathilda Pl\"],\"city\":\"Sunnyvale\",\"state\":\"CA\",\"zip_code\":\"94086\"}"
+
+**Correct: Unstructured address**
+
+        - Quote Request: "dropoff_address": "190 Mathilda Pl, Sunnyvale, CA 94086"
+          - Create Delivery Request: "dropoff_address": "190 Mathilda Pl, Sunnyvale, CA 94086"
+
+###### ¶ What fields can be updated using the Update Delivery API?
+
+Please refer to the following table:
+
+Parameter | Delivery created | Pickup started | Pickup imminent | Pickup complete | Dropoff started | Dropoff imminent | Dropoff complete
+---|---|---|---|---|---|---|---
+manifest reference | edit | edit | - | - | - | - | -
+dropoff_latitude | edit | edit | - | - | - | - | -
+dropoff_longitude | edit | edit | - | - | - | - | -
+pickup_notes | edit | edit | - | - | - | - | -
+dropoff_notes | edit | edit | edit | edit | edit | - | -
+dropoff_seller_notes | edit | edit | edit | edit | edit | - | -
+tip_by_customer | - | - | - | - | edit | edit | edit
+pickup_ready_dt | edit | edit | edit | - | - | - | -
+pickup_deadline_dt | edit | edit | edit | - | - | - | -
+dropoff_ready_dt | edit | edit | edit | - | - | - | -
+dropoff_deadline_dt | edit | edit | edit | - | - | - | -
+
+###### ¶ How do stores contact the courier?
+
+  * Once a courier is assigned, the following fields become available in the [Courier Update Webhook](https://developer.uber.com/docs/deliveries/daas/references/api/webhooks/courier-update-webhook):
+    * `courier.public_phone_info.phone_number` (an anonymized contact number)
+    * `courier.public_phone_info.pin_code` (a security code for verification)
+  * Stores can call the anonymized `phone_number`.
+  * An automated voice system will prompt the caller to enter their “Uber Pincode”.
+  * After entering the correct `pin_code`, the call will be connected to the courier.
+
+###### ¶ Store level access and role assignments
+
+Merchants can pass `role_assignments` which will contain the role and scope. The scope can be either store or organization level, allowing granular control over user permissions within their organization structure.
+
+  * Store level access must be enabled for your organization for `role_assignments` to take effect. Reach out to your Uber account manager.
+  * If store-level access is enabled, the value of the `roles` field will be ignored and roles will be derived from `role_assignments` . Otherwise `roles` will still be used.
+  * The maximum number of role_assignments is 1.
+  * If the `external_store_id` is not updated for a given store, please reach out to your account manager if you want to invite members for the store via API. Alternatively, you may update role assignments on your Direct Dashboard for stores without an `external_store_id`.
+  * Assigned roles cannot be updated via API. Please update any roles using your organization’s Direct Dashboard.
+
+What is Uber Direct?Do you have rate limits?What’s the difference between “Client ID”, “Customer ID”, and “Client Secret”?How long is the generated Quote & quote_id valid for?What’s the difference between the Delivery status and Courier Update WebhookWhat are the address best practices?What fields can be updated using the Update Delivery API?How do stores contact the courier?Store level access and role assignments
+
+#### [UberDevelopers](/)
+
+[Docs](/docs)
+
+© 2025 Uber Technologies Inc.
+
+[Privacy](https://www.uber.com/legal/en/document/?name=privacy-notice&country=great-britain&lang=en)[Accessibility](https://www.uber.com/gb/en/about/accessibility/?uclick_id=df42c37d-25d9-41ca-930e-8e06976d1d88)[Terms](https://www.uber.com/legal/document/?name=general-terms-of-use&uclick_id=df42c37d-25d9-41ca-930e-8e06976d1d88)
+
+## Uber Developers
+
+### [UberDevelopers](/)
+
+[Docs](/docs)
+
+Search
+
+[Sign in](/dashboard)
+
+##
+
+This guide will walk you through the step-by-step process of creating an **Uber Direct Self-Serve Account**. Upon creating your account, you will gain access to developer credentials to interact with Uber Direct APIs.
+
+If you encounter any issues while going through these steps, please reach out to your Uber Point of Contact or Account Manager.
+
+### ¶ Create Account
+
+**(Note: The Create Account process is currently available only in select regions. Please contact your Uber Point of Contact or Account Manager to verify its availability in your region.)**
+
+Start by visiting:
+
+  1. Please log in using your existing Uber account, or create a new one if you don’t have an account yet.
+
+**Please note:** If you are a managed account, do not create an account unless instructed by your Account Manager (AM). If you have a direct contact with Uber, please confirm with them before activating a self-serve account.
+
+2\. Please accept Uber’s terms and review privacy notice.  **Note: If you receive the prompt “We’re unable to set up your account.” it indicates that the email you are using is already associated with an existing Uber Direct organization.**
+
+  3. After successfully logging in to an Uber account you will be taken to the Uber Direct Account Creation flow. Please review and accept the Uber Direct Terms and Conditions and API Terms of Use once you fill all the fields.
+  4. Upon acceptance, you will be directed to the Uber Direct dashboard, where you can provide your payment details. If you skip this step, you can add it later; please refer to the Add Billing Information section for more details.
+  5. After successfully completing all the steps and inputting a valid credit card, you can begin placing delivery requests.
+
+#### ¶ Add Billing Information
+
+If you bypass step 4 during account creation, you can add billing information by following the steps in this section.
+
+  1. To add payment information, click “Billing” on the left sidebar.
+  2. Save the entered information when finished.
+  3. Returning to the Billing page, you’ll notice a new payment method listed in the Payment Method section.  **Note: You have to provide billing information before you grant the access for production credentials.**
+
+#### ¶ API Credentials
+
+After you have created your account, you can access your API credentials by navigating to the Developer tab in the Management section of your dashboard. You will need to obtain your “Customer ID”, “Client ID”, and “Client secret” to use the API.
+
+For the difference between “Client ID”, “Customer ID” and “Client Secret” please refer to our [FAQ](https://developer.uber.com/docs/deliveries/faq#what%E2%80%99s-the-difference-between-%E2%80%9Cclient-id%E2%80%9D,-%E2%80%9Ccustomer-id%E2%80%9D-and-%E2%80%9Cclient-secret%E2%80%9D?).
+
+Please note the top blue area, which indicates that you are in Test mode. These credentials are intended for your test sandbox environment, and they won’t generate real-world deliveries when you use the APIs. Once you provide the billing information and your account is approved for Production deliveries, you can click the button to switch to the production environment, as shown in the image below.
+
+**Please note:** The sandbox environment is provided solely for functional testing and integration validation. It is not designed or supported for load, performance, or stress testing.
+
+#### ¶ High-level Integration Flow
+
+This guide is intended as a reference for the high-level sample flow. Please feel free to create bespoke workflows that align with the available Uber Direct APIs.
+
+##### ¶ Testing with Postman
+
+Postman is an API development environment that simplifies running and testing API requests. With Postman, you won’t have to copy and paste data from one endpoint to another.
+
+[](https://www.postman.com/uber/workspace/uber-direct/overview)
+
+To set up Postman:
+
+  1. Download and install [Postman](https://www.getpostman.com/).
+
+  2. Uber’s Direct APIs are available at .
+
+  3. Select the **Uber Direct APIs** environment, and configure the following environment variables:
+
+     * `uber_api_client_id` and `uber_api_client_secret` from your test application
+     * `customer_id` from the Developer tab of the Dashboard
+
+#### ¶ Get an OAuth Token Using curl
+
+By now, you should have completed the Direct Account creation process through the Direct Dashboard and gained access to your developer application details, including your Client ID, Client Secret, and Customer ID.
+
+Here is an example of how to obtain an OAuth access token using the curl command:
+
+    curl --request POST 'https://auth.uber.com/oauth/v2/token' \
+    --header 'Content-Type: application/x-www-form-urlencoded' \
+    --data-urlencode 'client_id=' \
+    --data-urlencode 'client_secret=' \
+    --data-urlencode 'grant_type=client_credentials' \
+    --data-urlencode 'scope=eats.deliveries'
+
+Replace  and  with your actual client ID and client secret. This command sends a POST request to the Uber OAuth server, requesting an access token using the client credentials grant type. The response will contain an access token that you can use to authenticate your API requests:
+
+    {
+      "access_token": "",
+      "expires_in": 2592000,
+      "token_type": "Bearer",
+      "scope": "eats.deliveries"
+    }
+
+For more examples, see the [Authentication](https://developer.uber.com/docs/deliveries/guides/authentication) guide.
+
+#### ¶ Create a Quote Using the Uber Direct API Call
+
+The primary objective of the create quote API is to assess the deliverability, validity, and cost associated with delivery between two addresses. We highly recommend conducting this step as a prerequisite before proceeding with an actual delivery.
+
+    curl -X POST 'https://api.uber.com/v1/customers//delivery_quotes' \
+    -H 'Content-Type: application/json' \
+    -H 'Authorization: Bearer ' \
+    -d '{
+      "pickup_address": "{\"street_address\": [\"20 W 34th St\", \"Floor 2\"],\"state\":\"NY\",\"city\":\"New York\",\"zip_code\":\"10001\",\"country\":\"US\"}",
+      "dropoff_address": "{\"street_address\": [\"285 Fulton St\", \"\"],\"state\":\"NY\",\"city\":\"New York\",\"zip_code\":\"10006\",\"country\":\"US\"}"
+    }'
+
+Please replace  with the actual access token obtained in the previous step. Also, make sure to replace the sample pickup and dropoff addresses with actual values.
+
+Please be aware that in certain regions, it is important to include latitude and longitude coordinates during the Create Quote process. We kindly request that you consult your designated Uber technical point of contact to verify this specific requirement for your region.
+
+Upon successful execution of the request, the API will return a time estimate and fee quote for the delivery. You can use this information to display the quote to the user and obtain their confirmation to proceed with the delivery.
+
+As an example, the response below provides details on the delivery fee of $5.58, an estimated pickup time of 18 minutes, and the total end-to-end dropoff duration of 44 minutes.
+
+    {
+        "kind": "delivery_quote",
+        "id": "dqt_AI6aDfhsSNqsVNTG03QKxg",
+        "created": "2023-07-07T02:36:57.776Z",
+        "expires": "2023-07-07T02:51:57.776Z",
+        "fee": 558,
+        "currency": "usd",
+        "currency_type": "USD",
+        "dropoff_eta": "2023-07-07T03:21:29Z",
+        "duration": 44,
+        "pickup_duration": 18,
+        "dropoff_deadline": "2023-07-07T03:57:42Z"
+    }
+
+Please note that the “id” above must be saved, as it will be used in the next step.
+
+#### ¶ Create Test Deliveries Using Uber Direct API Call
+
+To create a delivery using the Uber Direct API via curl, it is essential to include the quote_id obtained from the previous step:
+
+    curl -X POST 'https://api.uber.com/v1/customers//deliveries' \
+    -H 'Content-Type: application/json' \
+    -H 'Authorization: Bearer ' \
+    -d '{
+       "quote_id": "dqt_AI6aDfhsSNqsVNTG03QKxg",
+        "pickup_address": "{\"street_address\": [\"20 W 34th St\", \"Floor 2\"],\"state\":\"NY\",\"city\":\"New York\",\"zip_code\":\"10001\",\"country\":\"US\"}",
+        "pickup_name": "My Store",
+        "pickup_phone_number": "4444444444",
+        "pickup_latitude": 40.74868,
+        "pickup_longitude": -73.98561,
+        "dropoff_address": "{\"street_address\": [\"285 Fulton St\", \"\"],\"state\":\"NY\",\"city\":\"New York\",\"zip_code\":\"10006\",\"country\":\"US\"}",
+        "dropoff_name": "Reese Ippient",
+        "dropoff_phone_number": "5555555555",
+        "dropoff_latitude": 40.71301,
+        "dropoff_longitude": -74.01317,
+        "manifest_items": [
+            {
+                "name": "Cell phone box",
+                "quantity": 1,
+                "weight": 30,
+                "dimensions": {
+                    "length": 40,
+                    "height": 40,
+                    "depth": 40
+                }
+            }
+        ]
+    }'
+
+You will get a response like below:
+
+    {
+      "id": "del_Pw2e2GpnS0Gf0XUjb2xi3R",
+      "quote_id": "dqt_Pw3f2GpnS0Gf0WUjb2yj3Q",
+      "status": "pending",
+      "complete": false,
+      "kind": "delivery",
+      "pickup": {
+        "name": "My Store",
+        "phone_number": "4444444444",
+        "address": "20 W 34th St, New York, NY 10001",
+        "detailed_address": {
+          "street_address_1": "20 W 34th St",
+          "street_address_2": "",
+          "city": "New York",
+          "state": "NY",
+          "zip_code": "10118",
+          "country": "US"
+        },
+        "notes": "",
+        "location": {
+          "lat": 40.74838,
+          "lng": -73.98477
+        }
+      },
+      "dropoff": {
+        "name": "Reese Ippient",
+        "phone_number": "+15555555555",
+        "address": "285 Fulton St, New York, NY 10007",
+        "detailed_address": {
+          "street_address_1": "One World Trade Center",
+          "street_address_2": "",
+          "city": "New York",
+          "state": "NY",
+          "zip_code": "10006",
+          "country": "US"
+        },
+        "notes": "",
+        "location": {
+          "lat": 40.71301,
+          "lng": -74.01317
+        }
+      },
+      "manifest": {
+        "description": "1 X Cell phone box\n",
+        "total_value": 0
+      },
+      "manifest_items": [
+        {
+          "name": "Cell phone box",
+          "quantity": 1,
+          "size": "small",
+          "must_be_upright": false
+        }
+      ],
+      "created": "2023-07-06T06:31:28.314Z",
+      "updated": "1970-01-01T00:00:00Z",
+      "pickup_ready": "2023-07-06T06:31:28Z",
+      "pickup_deadline": "2023-07-06T06:51:28Z",
+      "dropoff_ready": "2023-07-06T06:31:28Z",
+      "dropoff_deadline": "2023-07-06T07:23:01Z",
+      "pickup_eta": "2023-07-06T06:45:57Z",
+      "dropoff_eta": "2023-07-06T06:56:41Z",
+      "related_deliveries": null,
+      "fee": 532,
+      "currency": "usd",
+      "tracking_url": "https://www.ubereats.com/orders/xxxxxxxx-6a67-4b41-9fd1-65236f6c62dd",
+      "undeliverable_action": "",
+      "courier_imminent": false,
+      "courier": null,
+      "live_mode": false,
+      "undeliverable_reason": "",
+      "uuid": "3AFXXXXXXXX4B419FD165236F6C62DD",
+      "fences": null,
+      "external_id": "",
+      "items_acquired": null,
+      "state_changes": null
+    }
+
+With this, you have successfully created a test delivery.
+
+Descriptions for all of the fields in the request and response can be found in the [Create Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas) documentation.
+
+#### ¶ Track Delivery Using tracking_url
+
+Once you send the Create Delivery request, you can easily track the progress of the delivery throughout each stage of the delivery using the provided tracking_url in the response.
+
+We strongly encourage you to use the tracking_url value returned in the response of the [Create Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas) request. Please do not manipulate or change this URL, as this URL may be subject to changes.
+
+Here’s an example of what you’ll see when you open the tracking URL:
+
+Create AccountAdd Billing InformationAPI CredentialsHigh-level Integration FlowTesting with PostmanGet an OAuth Token Using curlCreate a Quote Using the Uber Direct API CallCreate Test Deliveries Using Uber Direct API CallTrack Delivery Using tracking_url
+
+#### [UberDevelopers](/)
+
+[Docs](/docs)
+
+© 2025 Uber Technologies Inc.
+
+[Privacy](https://www.uber.com/legal/en/document/?name=privacy-notice&country=great-britain&lang=en)[Accessibility](https://www.uber.com/gb/en/about/accessibility/?uclick_id=df42c37d-25d9-41ca-930e-8e06976d1d88)[Terms](https://www.uber.com/legal/document/?name=general-terms-of-use&uclick_id=df42c37d-25d9-41ca-930e-8e06976d1d88)
+
+## Uber Developers
+
+### [UberDevelopers](/)
+
+[Docs](/docs)
+
+Search
+
+[Sign in](/dashboard)
+
+## Overview
+
+### ¶ About Uber Direct
+
+Welcome to Uber Direct!
+
+This platform enables merchants like you to integrate your applications and services with Uber Direct’s order delivery system. By leveraging our APIs, you can now easily automate the process of dispatching an Uber courier for pickup and deliveries.
+
+This developer portal provides documentation and resources to assist you in creating, managing, and monitoring deliveries using the Uber Direct platform.
+
+#### ¶ The difference Between Uber Direct APIs and Uber Eats Marketplace APIs
+
+The Uber Direct API empowers merchants to seamlessly integrate their applications and services with the Uber Direct order delivery system. Once your application invokes Uber’s Create Delivery endpoint, a dedicated Uber courier will be dispatched to collect the order from the store and deliver it to the customer.
+
+Conversely, the Uber Eats Marketplace APIs offer partners the capability to programmatically manage various aspects of your stores, menus, and orders on the Uber Eats app. If you require assistance with managing operations on the Uber Eats platform, we encourage you to explore the resources provided in the [Uber Eats APIs documentation](https://developer.uber.com/docs/eats/introduction).
+
+#### ¶ Integration Process
+
+  1. Refer to the [
+  2. Your team can use the Uber Direct RESTful endpoints and API documentation to develop your integration on a timeline that aligns with your roadmap. We are available to provide support as needed throughout the development process.
+  3. Once your development is complete and ready for production, we will require actual stores to participate in a pilot run of the integration.
+  4. The Uber team will collaborate with you to monitor the data and ensure the successful integration of your solution.
+  5. Upon successful completion of the pilot run, you can deploy the integration to all stores. At this point, our 24-hour support team will also be able to help with any technical questions.
+
+About Uber DirectThe difference Between Uber Direct APIs and Uber Eats Marketplace APIsIntegration Process
+
+#### [UberDevelopers](/)
+
+[Docs](/docs)
+
+© 2025 Uber Technologies Inc.
+
+[Privacy](https://www.uber.com/legal/en/document/?name=privacy-notice&country=great-britain&lang=en)[Accessibility](https://www.uber.com/gb/en/about/accessibility/?uclick_id=df42c37d-25d9-41ca-930e-8e06976d1d88)[Terms](https://www.uber.com/legal/document/?name=general-terms-of-use&uclick_id=df42c37d-25d9-41ca-930e-8e06976d1d88)
+
+## Uber Developers
+
+### [UberDevelopers](/)
+
+[Docs](/docs)
+
+Search
+
+[Sign in](/dashboard)
+
+## Uber Eats Marketplace APIs
+
+**Access to These APIs May Require Written Approval From Uber**
+
+Uber’s APIs are always under development and as such are subject to changes according to our Versioning & Upgrade policy. As part of Uber’s ongoing privacy improvements, we’ve updated our Developer API program with new scope access policies for third party applications. For further information, please refer to our Getting Started guide in the navigation panel.
+
+# ¶ Overview
+
+The Uber Eats Marketplace APIs enable partners to programmatically manage stores, menus, and orders on the Uber Eats platform. Build integrations that automate order processing, synchronize menus in real-time, and manage store operations at scale.
+
+## ¶ What You Can Build
+
+**Point-of-Sale (POS) Integrations** Connect your POS system to automatically sync menus, inject orders, and eliminate manual processes. This is the most common and valuable integration path.
+
+**Menu Management Systems** Keep menus synchronized across platforms with real-time updates for pricing, availability, and new items.
+
+**Order Management Solutions** Automate order workflows from notification to fulfillment with webhooks and API endpoints. Includes support for BYOC (Bring Your Own Courier) delivery management.
+
+**Multi-location Management** Scale operations across hundreds or thousands of restaurant locations with enterprise-grade APIs.
+
+**Promotional Campaign Management** Create, manage, and track promotional campaigns to drive customer engagement and sales.
+
+## ¶ Marketplace API Overview
+
+API Suite | Purpose | Key Use Cases
+---|---|---
+**Integration Configuration** | Store onboarding and setup | Connect apps to merchant locations, manage integrations
+**Menu** | Menu and item management | Sync menus, update pricing, manage store hours
+**Store** | Store operations | Set hours, manage online status, configure locations
+**Order** | Order processing | Accept/deny orders, track fulfillment, handle cancellations, BYOC delivery management
+**Promotions** | Campaign management | Create promotions, manage offers, track campaign performance
+**Reporting** | Analytics and insights | Transaction reports, performance metrics
+
+## ¶ Documentation Guide
+
+Our comprehensive guide library covers every aspect of integration development:
+
+**Core Integration Guides**
+
+  * [Getting Started](guides/getting-started) \- Complete setup and development workflow
+  * [Authentication](guides/authentication) \- OAuth 2.0 implementation and scopes
+
+**API-Specific Implementation**
+
+  * [Menu Integration](guides/menu-integration) \- Real-time menu synchronization
+  * [Order Integration](guides/order-integration) \- End-to-end order processing
+  * [Store Integration](guides/store-integration) \- Store management and configuration
+  * [Webhooks](guides/webhooks) \- Event-driven architecture setup
+
+**Advanced Features**
+
+  * [Item Customizations](guides/item-customizations) \- Complex menu item configurations
+  * [Order States](guides/order-states) \- Order lifecycle management
+  * [Going Live](guides/going-live) \- Production deployment checklist
+
+## ¶ Integration Paths
+
+**Full POS Integration (4-8 weeks)** Complete automation with real-time sync, order injection, promotional campaigns, BYOC delivery management, and comprehensive workflow management. Meets all production quality standards.
+
+**Enterprise Reporting Integration (2-4 weeks)** Focused on analytics and business intelligence through the Reporting API. Perfect for organizations that need transaction reports, performance metrics, and data insights without full operational integration.
+
+## ¶ Staying Updated
+
+The Uber Eats Marketplace APIs are actively developed with regular updates and new features:
+
+**API Evolution**
+
+  * [API Change Log](api-change-log) \- Comprehensive history of all API updates, new features, and breaking changes
+  * [Versioning Strategy](versioning) \- How we manage API versions and backward compatibility
+
+**Integration Maintenance**
+
+  * Monitor the change log for new features that can enhance your integration
+  * Test version updates in your staging environment before production deployment
+  * Subscribe to webhook notifications for real-time platform updates
+
+## ¶ Before You Start
+
+  1. **Review Requirements** \- Check our [Quality & Performance Standards](quality-and-performance) for production requirements (99% injection success rate required)
+  2. **Understand Versioning** \- Read about [API Versioning](versioning) and change management
+  3. **Set Up Development** \- Create your developer account and review authentication
+
+## ¶ Getting Started
+
+Ready to build a production-quality integration? Follow our comprehensive [Getting Started](guides/getting-started) guide which covers:
+
+  * Developer account setup and scope configuration
+  * Test store provisioning and authentication
+  * End-to-end integration workflow
+  * Production validation requirements
+
+## ¶ Need Help?
+
+  * **Technical Questions:** [Integration Support Form](http://t.uber.com/integration-support)
+  * **Quick Answers:** Check our [FAQ](faq)
+  * **API Changes:** Monitor our [API Change Log](api-change-log)
+  * **Business Inquiries:** Contact your Uber Eats partner manager
+
+* * *
+
+**Next Step:** Start with [Getting Started](guides/getting-started) or jump directly to [Authentication](guides/authentication) if you’re already familiar with Uber’s developer platform.
+
+OverviewWhat You Can BuildMarketplace API OverviewDocumentation GuideIntegration PathsStaying UpdatedBefore You StartGetting StartedNeed Help?
+
+### [UberDevelopers](/)
+
+[Docs](/docs)
+
+© 2025 Uber Technologies Inc.
+
+[Privacy](https://www.uber.com/legal/en/document/?name=privacy-notice&country=great-britain&lang=en)[Accessibility](https://www.uber.com/gb/en/about/accessibility/?uclick_id=df42c37d-25d9-41ca-930e-8e06976d1d88)[Terms](https://www.uber.com/legal/document/?name=general-terms-of-use&uclick_id=df42c37d-25d9-41ca-930e-8e06976d1d88)
+
+## Uber Developers
+
+### [UberDevelopers](/)
+
+[Docs](/docs)
+
+Search
+
+[Sign in](/dashboard)
+
+### Uber Developer Documentation
+
+Explore our guides and examples to integrate with our various product offerings.
+
+#### [Uber EatsManage your stores, menus, and orders on Uber Eats.[View Docs](/docs/eats/introduction)](/docs/eats/introduction)
+
+##### [Uber DirectLeverage Uber’s courier network to deliver your orders.[View Docs](/docs/deliveries/overview)](/docs/deliveries/overview)
+
+###### [Guest TripsEnable your users to request rides from Uber.[View Docs](/docs/guest-rides/introduction)](/docs/guest-rides/introduction)
+
+###### [VouchersAllow your users to redeem customized Uber vouchers for rides and meals.[View Docs](/docs/vouchers/introduction)](/docs/vouchers/introduction)
+
+###### [Uber DriversUtilize Uber’s driver profiles, payments, and trips.[View Docs](/docs/drivers/introduction)](/docs/drivers/introduction)
+
+###### [Uber PayIntegrate with Uber’s payment ecosystem.[View Docs](/docs/payments/introduction)](/docs/payments/introduction)
+
+###### [Uber for BusinessAutomate workflows within your organization.[View Docs](/docs/businesses/introduction)](/docs/businesses/introduction)
+
+###### [Uber for SuppliersLeverage Uber to grow your vehicles business[View Docs](/docs/vehicles/introduction)](/docs/vehicles/introduction)
+
+###### [Uber AdsAdvertising platform APIs for partners and merchants.[View Docs](/docs/ads/introduction)](/docs/ads/introduction)
+
+#### [UberDevelopers](/)
+
+[Docs](/docs)
+
+© 2025 Uber Technologies Inc.
+
+[Privacy](https://www.uber.com/legal/en/document/?name=privacy-notice&country=great-britain&lang=en)[Accessibility](https://www.uber.com/gb/en/about/accessibility/?uclick_id=df42c37d-25d9-41ca-930e-8e06976d1d88)[Terms](https://www.uber.com/legal/document/?name=general-terms-of-use&uclick_id=df42c37d-25d9-41ca-930e-8e06976d1d88)
+
+## Uber Developers
+
+### [UberDevelopers](/)
+
+[Docs](/docs)
+
+Search
+
+[Sign in](/dashboard)
+
+## Support
+
+Uber Direct offers a white-gloved, 24 hours / 7 days a week support service to any integration partner in production.
+
+Our dedicated support team is trained and ready to receive any technical queries related to Uber Direct. Below are some of the common queries received:
+
+> _“I wasn’t able to generated a trip for my order XYZ, I need to know more details of the API error”_
+
+> _“I received the following error: ‘The specified location was not understood’ and I need help to debug it”_
+
+> _“I need to know if the proof of delivery feature was enabled for a trip, with ID 12345”_
+
+To contact the support team at any time, simply complete the online support form found using the following link: .
+
+Please remember to include as much information as possible within the ticket, including;
+
+  * What error was received?
+  * What was the expected vs actual behavior?
+  * What debugging steps have you already taken?
+
+### [UberDevelopers](/)
+
+[Docs](/docs)
+
+© 2025 Uber Technologies Inc.
+
+[Privacy](https://www.uber.com/legal/en/document/?name=privacy-notice&country=great-britain&lang=en)[Accessibility](https://www.uber.com/gb/en/about/accessibility/?uclick_id=df42c37d-25d9-41ca-930e-8e06976d1d88)[Terms](https://www.uber.com/legal/document/?name=general-terms-of-use&uclick_id=df42c37d-25d9-41ca-930e-8e06976d1d88)
+
+## Uber Developers
+
+### [UberDevelopers](/)
+
+[Docs](/docs)
+
+Search
+
+[Sign in](/dashboard)
+
+## Changelog
+
+All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+### ¶ Oct 27, 2025
+
+**Added** -
+
+  * Added new API [Refund Submission API](https://developer.uber.com/docs/deliveries/api-reference/refund). This API suite allows organizations to programmatically request refunds for orders that meet specific criteria.
+
+#### ¶ Sep 26, 2025
+
+**Added**
+
+  * Improved visibility for batched orders: `dropoff_sequence_number` and `short_batch_id` added to the [Get Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery/paths/~1customers~1%7Bcustomer_id%7D~1deliveries~1%7Bdelivery_id%7D/get) Response and [Delivery Status](https://developer.uber.com/docs/deliveries/daas/references/api/webhooks/delivery-status-webhook) Webhook
+
+**Updated**
+
+  * Best practice recommendations for [Delivery Window](https://developer.uber.com/docs/deliveries/guides/delivery-window) guide
+
+#### ¶ Sep 22, 2025
+
+**Added**
+
+  * Added store and organization level `role_assignments` in the [Invite New User to Organization](https://developer.uber.com/docs/deliveries/api-reference/org#tag/Organizations/operation/InviteToOrg) allowing granular control over user permissions within their organization structure.
+  * Added FAQ: [Store level access and role assignments](https://developer.uber.com/docs/deliveries/faq#store-level-access-and-role-assignments)
+  * Added documentation for [CPP Create Quote](https://developer.uber.com/docs/deliveries/api-reference/cpp#operation/createQuote) endpoint.
+
+#### ¶ Sep 2, 2025
+
+**Added**
+
+  * Added FAQ: [How do stores contact the courier?](https://developer.uber.com/docs/deliveries/faq#how-do-stores-contact-the-courier?)
+
+**Fixed**
+
+  * Improved clarity for `contract_type` in [Create Direct Organizations](https://developer.uber.com/docs/deliveries/api-reference/org#tag/Organizations/operation/CreateOrg) endpoint.
+
+#### ¶ Jul 19, 2025
+
+**Added**
+
+  * Added optional fields `first_name` and `last_name` to `point_of_contact` in [Create Direct Organizations](https://developer.uber.com/docs/deliveries/api-reference/org#operation/findStores). This improves the user experience for organizations using decentralized billing.
+  * Added `shopping_completed` delivery status in [Delivery Status Webhook](https://developer.uber.com/docs/deliveries/daas/references/api/webhooks/delivery-status-webhook#definition-of-delivery-status) for CPP orders.
+
+**Fixed**
+
+  * `manifest_items.replacement_types` values now accurately reflect api response in the [CPP API](https://developer.uber.com/docs/deliveries/api-reference/cpp#section/Table-of-Contents)
+  * Corrected `user_fees_summary` data structure in [Create Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery/paths/~1customers~1%7Bcustomer_id%7D~1deliveries/post)
+  * Corrected `user_fees_summary.amount_in_cents` to `user_fees_summary.amount`
+  * Removed duplicate courier `name` in [Delivery Status Webhook Sample](https://developer.uber.com/docs/deliveries/daas/references/api/webhooks/delivery-status-webhook)
+  * Removed obsolete `\"\"` from [Address Best Practices](https://developer.uber.com/docs/deliveries/faq#operation/findStores)
+  * Removed `return.status` and `return.status_timestamp` from [Get Delivery Response](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery/paths/~1customers~1%7Bcustomer_id%7D~1deliveries~1%7Bdelivery_id%7D/get) to correctly reflect payload response.
+
+#### ¶ May 29, 2025
+
+**Added**
+
+  * Added `item_customizations` to [Create Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery/paths/~1customers~1%7Bcustomer_id%7D~1deliveries/post) endpoint, allowing merchants to specify custom modifications for individual manifest items.
+
+**Changed**
+
+  * Modified default geocoding behavior in [Geocoding](https://developer.uber.com/docs/deliveries/guides/geocoding) guide. Dropoff addresses are now geocoded by Uber by default. Merchants can contact Uber Support to use their own lat/lng coordinates instead.
+
+#### ¶ Apr 17, 2025
+
+**Added**
+
+  * Support for new query parameters in the [List Deliveries](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery/paths/~1customers~1%7Bcustomer_id%7D~1deliveries/get) endpoint:
+    * `external_store_id`: Filter deliveries by external store identifier.
+    * `start_dt`: Filter deliveries starting from a specific date/time (RFC 3339 format).
+    * `end_dt`: Filter deliveries up to a specific date/time (RFC 3339 format).
+  * Added optional object `user_fees_summary` in [Create Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery/paths/~1customers~1%7Bcustomer_id%7D~1deliveries/post) request to specify individual fees and discounts and allow Uber support to issue partial refunds on the merchant’s behalf.
+  * Improved support for decentralized self-serve onboarding. This can be activated by setting `contract type` to `CONTRACT_TYPE_PARENT` in the [Create Direct Organization](https://developer.uber.com/docs/deliveries/api-reference/org#tag/Organizations) endpoint.
+
+#### ¶ Feb 13, 2025
+
+**Added**
+
+  * Added new Guide [Geocoding](https://developer.uber.com/docs/deliveries/guides/geocoding)
+  * The [Get Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery/paths/~1customers~1%7Bcustomer_id%7D~1deliveries~1%7Bdelivery_id%7D/get) endpoint now returns the courier’s `vehicle_license_plate`.
+  * Added `unmarked_location_description` in webhook payloads.
+
+**Changed**
+
+  * Added more clarification for `dropoff_eta` in [Create Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery/paths/~1customers~1%7Bcustomer_id%7D~1deliveries/post) response.
+  * Added more clarification in the [Delivery Window](https://developer.uber.com/docs/deliveries/guides/delivery-window) guide.
+
+#### ¶ Oct 22, 2024
+
+**Added**
+
+  * Added new API [Courier Pick and Pack](https://developer.uber.com/docs/deliveries/api-reference/cpp)
+  * Added new Guide [JS SDK](https://developer.uber.com/docs/deliveries/guides/sdk)
+  * Added new [Shopping Progress Webhook](https://developer.uber.com/docs/deliveries/daas/references/api/webhooks/cpp-shopping-notification) for Courier Pick and Pack API
+  * Added new field `public_phone_info` in [Get Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery/paths/~1customers~1%7Bcustomer_id%7D~1deliveries/get), [Delivery Status Webhook](https://developer.uber.com/docs/deliveries/daas/references/api/webhooks/delivery-status-webhook) and [Courier Update Webhook](https://developer.uber.com/docs/deliveries/daas/references/api/webhooks/courier-update-webhook)
+  * Added `ROLE_SUPPORT` in [Organizations API](https://developer.uber.com/docs/deliveries/api-reference/org#tag/Organizations/operation/InviteToOrg) for new support user type in Direct Dashboard.
+
+#### ¶ Sept 1, 2024
+
+**Added**
+
+  * Added new field `contract_type` to [Create Organization API](https://developer.uber.com/docs/deliveries/api-reference/org)
+  * Added note for not allowed characters in [Create Organization API](https://developer.uber.com/docs/deliveries/api-reference/org)
+  * Added new field `return_notes` in [Create Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Quotes/paths/~1customers~1%7Bcustomer_id%7D~1delivery_quotes/post)
+
+#### ¶ July 1, 2024
+
+**Added**
+
+  * Added retry logic to [Webhook Overview](https://developer.uber.com/docs/deliveries/guides/webhooks)
+  * Added new field `no_sobriety_check` to `dropoff_verification` in [Create Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Quotes/paths/~1customers~1%7Bcustomer_id%7D~1delivery_quotes/post)
+  * Added new field `type` on `dropoff_verification` and `return_verification` in [Create Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Quotes/paths/~1customers~1%7Bcustomer_id%7D~1delivery_quotes/post)
+
+#### ¶ March 18, 2024
+
+**Added**
+
+  * Added Public Postman Workspace. Uber’s Direct APIs are available at .
+
+[](https://www.postman.com/uber/workspace/uber-direct/overview)
+
+#### ¶ Nov 30, 2023
+
+**Added**
+
+  * Added code samples for all [Direct API](https://developer.uber.com/docs/deliveries/api-reference/daas) endpoints
+  * Added more description for `batch_id` in [Delivery Status Webhook](https://developer.uber.com/docs/deliveries/daas/references/api/webhooks/delivery-status-webhook) and [Courier Update Webhook](https://developer.uber.com/docs/deliveries/daas/references/api/webhooks/courier-update-webhook)
+  * Added more description for [Authenticating Webhooks](http://localhost:3000/docs/deliveries/guides/webhooks#tag/Delivery/paths/~1customers~1%7Bcustomer_id%7D~1deliveries~1%7Bdelivery_id%7D~1proof-of-delivery/post)
+  * Added more description for [What are the address best practices?](https://developer.uber.com/docs/deliveries/faq#what-are-the-address-best-practices?)
+
+**Fixed**
+
+  * Fixed 500 error message in [Direct API](https://developer.uber.com/docs/deliveries/api-reference/daas)
+
+#### ¶ Oct 24, 2023
+
+**Changed**
+
+  * Added more clarification on `x-uber-signature` in the [Authenticating Webhooks](https://developer.uber.com/docs/deliveries/guides/webhooks#authenticating-webhooks)
+
+**Fixed**
+
+  * Fixed incorrect `country_iso2` payload value in [Organizations API](https://developer.uber.com/docs/deliveries/api-reference/org)
+
+**Added**
+
+  * Added more descriptions for address in [Create Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Quotes/paths/~1customers~1%7Bcustomer_id%7D~1delivery_quotes/post)
+  * Added `vat_percentage` in `manifest_items`
+
+#### ¶ Oct 18, 2023
+
+**Fixed**
+
+  * Add `CUSTOMER_CANCEL` into webhook secondary reason
+
+#### ¶ Oct 16, 2023
+
+**Fixed**
+
+  * Dedupe default duration update to 60mins
+  * Remove courier lat/long and vehicle information in [delivered Webhook](https://developer.uber.com/docs/deliveries/daas/references/api/webhooks/delivery-status-webhook#tag/Delivery/paths/~1customers~1%7Bcustomer_id%7D~1deliveries~1%7Bdelivery_id%7D~1proof-of-delivery/post) and add more descriptions
+
+**Added**
+
+  * Added more descriptions about manifest_reference in [Create Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery/paths/~1customers~1%7Bcustomer_id%7D~1deliveries/post) and [Update Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery/paths/~1customers~1%7Bcustomer_id%7D~1deliveries~1%7Bdelivery_id%7D/post)
+
+#### ¶ Oct 05, 2023
+
+**Fixed**
+
+  * Replace “DaaS API” with “Direct API” throughout the entire document.
+
+#### ¶ Oct 02, 2023
+
+**Added**
+
+  * Add [Support](https://developer.uber.com/docs/deliveries/support) and [FAQ](https://developer.uber.com/docs/deliveries/faq) section
+
+#### ¶ Sep 26, 2023
+
+**Fixed**
+
+  * Refine create account process in [
+
+#### ¶ Sep 21, 2023
+
+**Removed**
+
+  * Removed `locale` from [Create Direct Organizations](https://developer.uber.com/docs/deliveries/api-reference/org)
+
+#### ¶ Sep 14, 2023
+
+**Fixed**
+
+  * Fix [List Delivery Endpoint](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery/paths/~1customers~1%7Bcustomer_id%7D~1deliveries~1%7Bdelivery_id%7D/post) URL
+
+#### ¶ Sep 12, 2023
+
+**Added**
+
+  * Added more response code in DaaS API
+
+#### ¶ Sep 1, 2023
+
+**Added**
+
+  * Clarify Pickup/Business Names in [Create Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery/paths/~1customers~1%7Bcustomer_id%7D~1deliveries/post)
+
+**Fixed**
+
+  * Fix barcode description in [Proof of Delivery](https://developer.uber.com/docs/deliveries/guides/proof-of-delivery#barcodes)
+  * Fix structured address malformed in [Create Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Quotes/paths/~1customers~1%7Bcustomer_id%7D~1delivery_quotes/post)
+  * Fix lng typo in [Create Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Quotes/paths/~1customers~1%7Bcustomer_id%7D~1delivery_quotes/post)
+
+#### ¶ Aug 31, 2023
+
+**Added**
+
+  * Added more information on updating barcode verification in [Proof of Delivery](https://developer.uber.com/docs/deliveries/guides/proof-of-delivery#barcodes)
+
+#### ¶ Aug 24, 2023
+
+**Added**
+
+  * Added more error code to [Create Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery/paths/~1customers~1%7Bcustomer_id%7D~1deliveries/post)
+
+#### ¶ Aug 21, 2023
+
+**Added**
+
+  * Added Options to create [organization endpoint](https://developer.uber.com/docs/deliveries/api-reference/org)
+
+#### ¶ Aug 18, 2023
+
+**Fixed**
+
+  * Fixed the scope description in [authentication request table](https://developer.uber.com/docs/deliveries/guides/authentication#tag/Delivery/paths/~1customers~1%7Bcustomer_id%7D~1deliveries~1%7Bdelivery_id%7D~1proof-of-delivery/post)
+
+#### ¶ Aug 17, 2023
+
+**Added**
+
+  * Add the “signature_requirement” within the “return_verification” of the Create Delivery request
+
+**Fixed**
+
+  * Fixed the descriptions of Picture Requirement
+  * Fixed the URL of List Delivery Endpoint
+
+**Removed**
+
+  * Remove verification section under [CreateDelivery 200 response](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Quotes/paths/~1customers~1%7Bcustomer_id%7D~1delivery_quotes/post)
+
+#### ¶ Aug 15, 2023
+
+**Fixed**
+
+  * Mark `requires_id` as deprecated
+  * Fixed all descriptions around “cents” in all DaaS API
+
+#### ¶ Aug 10, 2023
+
+**Added**
+
+  * Enhance the clarity of the `external_store_id` description
+
+**Removed**
+
+  * Removed sublocality_level_1 from whole document
+
+#### ¶ Aug 09, 2023
+
+**Added**
+
+  * Added pincode verification page in [Pincode](https://developer.uber.com/docs/deliveries/guides/pincode)
+
+#### ¶ Jul 27, 2023
+
+**Fixed**
+
+  * Fixed Authentication page in [Authentication](https://developer.uber.com/docs/deliveries/guides/authentication)
+
+**Added**
+
+  * Added refund information in [Get Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery/paths/~1%7Bcustomer_id%7D~1deliveries~1%7Bdelivery_id%7D/post)
+
+#### ¶ Jul 26, 2023
+
+**Fixed**
+
+  * Fixed scope in Organization API
+  * Fixed urls in Organization API
+
+**Added**
+
+  * Added courier info in [Get Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery/paths/~1%7Bcustomer_id%7D~1deliveries~1%7Bdelivery_id%7D/post), [Cancel Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery/paths/~1%7Bcustomer_id%7D~1deliveries~1%7Bdelivery_id%7D/post) and [Update Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery/paths/~1%7Bcustomer_id%7D~1deliveries~1%7Bdelivery_id%7D/post)
+
+#### ¶ Jul 4, 2023
+
+**Fixed**
+
+  * Fixed `phone_number` description in Courier Info on [Delivery Status Notification Webhook](https://developer.uber.com/docs/deliveries/daas/references/api/webhooks/delivery-status-webhook)
+
+#### ¶ Jun 09, 2023
+
+**Added**
+
+  * Added note to dimensions on Manifest Items in [Create Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery)
+
+#### ¶ May 24, 2023
+
+**Fixed**
+
+  * Fixed Getting started page in [Getting Started](https://developer.uber.com/docs/deliveries/get-started)
+
+#### ¶ May 19, 2023
+
+**Added**
+
+  * Added `discard` to Undeliverable Action options
+
+#### ¶ May 16, 2023
+
+**Fixed**
+
+  * Fixed Cancellation Reasons on [Delivery Status Notification](https://developer.uber.com/docs/deliveries/daas/references/api/webhooks/delivery-status-webhook) and [Courier Update Notification](https://developer.uber.com/docs/deliveries/daas/references/api/webhooks/courier-update-webhook)
+
+**Added**
+
+  * Added definition for `external_id` on [Create Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery)
+
+#### ¶ May 09, 2023
+
+**Removed**
+
+  * Removed value `ongoing` from allowed values on status list in [Get Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery)
+
+**Fixed**
+
+  * Fixed `dropoff_phone_number` and `pickup_phone_number` description in [Create Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery) and [Create Qoute](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery) to include format specification
+
+#### ¶ May 04, 2023
+
+**Removed**
+
+  * Removed `dropoff_identifier` in [Create Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery), [Cancel Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery), [Update Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery), [List Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery), [Delivery Status Notification](https://developer.uber.com/docs/deliveries/daas/references/api/webhooks/delivery-status-webhook) and [Courier Update Notification](https://developer.uber.com/docs/deliveries/daas/references/api/webhooks/courier-update-webhook)
+
+**Added**
+
+  * Added `outcome` and `timestamp` to `scan_result` in Verification Barcode Scan Result
+  * Added description for primary and secondary `cancellation_reason` on [Delivery Status Notification](https://developer.uber.com/docs/deliveries/daas/references/api/webhooks/delivery-status-webhook) and [Courier Update Notification](https://developer.uber.com/docs/deliveries/daas/references/api/webhooks/courier-update-webhook)
+
+#### ¶ May 03, 2023
+
+**Added**
+
+  * Added description about the usage of `delivery_id` and `UUID` in [POD Retrieval](https://developer.uber.com/docs/deliveries/daas/api/v1/post-customers-customerid-deliveries-deliveryid-proofofdelivery)
+
+#### ¶ May 02, 2023
+
+**Fixed**
+
+  * Fixed description in Manifest
+  * Fixed description in Manifest Item
+
+#### ¶ May 01, 2023
+
+**Fixed**
+
+  * Fixed notes for `deliverable` and `undeliverable` actions Request Parameters
+  * Fixed description in Deliverable Action
+  * Fixed description in Undeliverable Action
+
+#### ¶ Apr 28, 2023
+
+**Added**
+
+  * Added verification description in Direct [Get Delivery Status](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery)
+
+**Fixed**
+
+  * Fixed all descriptions around “cents” in all DaaS API
+  * Fixed errors order in POD Retrieval
+
+#### ¶ Apr 14, 2023
+
+**Added**
+
+  * Added the Create Organization API
+  * Added the [Refund Notification Webhook](https://developer.uber.com/docs/deliveries/daas/references/api/webhooks/refund-webhook) to the DaaS API
+  * Added batch_id to [Delivery Status Notification](https://developer.uber.com/docs/deliveries/daas/references/api/webhooks/delivery-status-webhook) which will now be used instead of route_id for identifying batched orders
+
+**Fixed**
+
+  * Fixed the object type for the `size` from object to string field in [Create Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery) and [Update Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery)
+  * Fixed missing descriptions for Address field in [Create Organization API](https://developer.uber.com/docs/deliveries/api-reference/org)
+  * Fixed incorrect description for pickup_phone_number field in [Create Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery)
+  * Standardized the manifest items reference body in [Create Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery)
+  * Fixed the event field in [Delivery Status Notification](https://developer.uber.com/docs/deliveries/daas/references/api/webhooks/delivery-status-webhook) payload to only display `kind` and `status`
+  * Fixed status description in [Create Delivery Response](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery) to always show pending by default
+
+**Changed**
+
+  * Changed the HTTP status code for `address_undeliverable_limited_couriers` from 422 to 400 in [Create Quote](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery) and [Create Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery)
+  * Change the description for `courier_imminent` in [Delivery Status Notification Webhooks](https://developer.uber.com/docs/deliveries/daas/references/api/webhooks/delivery-status-webhook), [Courier Update Notification](https://developer.uber.com/docs/deliveries/daas/references/api/webhooks/courier-update-webhook), and [Get Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery)
+
+**Removed**
+
+  * Removed the `package` field as a verification requirements as it was outdated
+  * Removed an outdated overview page and HTTP status code page
+  * Removed unused parameters in `manifest_items` in [Create Delivery](https://developer.uber.com/docs/deliveries/api-reference/daas#tag/Delivery)
+
+Oct 27, 2025Sep 26, 2025Sep 22, 2025Sep 2, 2025Jul 19, 2025May 29, 2025Apr 17, 2025Feb 13, 2025Oct 22, 2024Sept 1, 2024July 1, 2024March 18, 2024Nov 30, 2023Oct 24, 2023Oct 18, 2023Oct 16, 2023Oct 05, 2023Oct 02, 2023Sep 26, 2023Sep 21, 2023Sep 14, 2023Sep 12, 2023Sep 1, 2023Aug 31, 2023Aug 24, 2023Aug 21, 2023Aug 18, 2023Aug 17, 2023Aug 15, 2023Aug 10, 2023Aug 09, 2023Jul 27, 2023Jul 26, 2023Jul 4, 2023Jun 09, 2023May 24, 2023May 19, 2023May 16, 2023May 09, 2023May 04, 2023May 03, 2023May 02, 2023May 01, 2023Apr 28, 2023Apr 14, 2023
+
+#### [UberDevelopers](/)
+
+[Docs](/docs)
+
+© 2025 Uber Technologies Inc.
+
+[Privacy](https://www.uber.com/legal/en/document/?name=privacy-notice&country=great-britain&lang=en)[Accessibility](https://www.uber.com/gb/en/about/accessibility/?uclick_id=df42c37d-25d9-41ca-930e-8e06976d1d88)[Terms](https://www.uber.com/legal/document/?name=general-terms-of-use&uclick_id=df42c37d-25d9-41ca-930e-8e06976d1d88)

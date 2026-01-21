@@ -1,0 +1,26 @@
+[
+  {
+    "type": "radius",
+    "km": 3,
+    "fee": 2.99,
+    "minOrder": 15,
+    "etaMin": 30,
+    "label": "Zone 1"
+  },
+  {
+    "type": "radius",
+    "km": 6,
+    "fee": 4.99,
+    "minOrder": 20,
+    "etaMin": 45,
+    "label": "Zone 2"
+  },
+  {
+    "type": "radius",
+    "km": 10,
+    "fee": 7.99,
+    "minOrder": 30,
+    "etaMin": 60,
+    "label": "Zone 3"
+  }
+]

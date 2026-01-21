@@ -1,0 +1,86 @@
+{
+  "name": "Shahirizada Fresh Market",
+  "tagline": "Halal, never-frozen meats — freshly cut daily in Naperville.",
+  "logo": "/data/sample/logo.png",
+  "theme": {
+    "brand": "#6B0F1A",
+    "accent": "#E8D5BA",
+    "bg": "#FFFFFF",
+    "text": "#1B1B1B"
+  },
+  "contact": {
+    "phone": "+1 (772) 773-7680",
+    "email": "info@tabsy.us"
+  },
+  "address": {
+    "line1": "3124 Illinois Rte 59 Suite 154",
+    "city": "Naperville",
+    "state": "IL",
+    "zip": "60564",
+    "coordinates": {
+      "lat": 41.7508,
+      "lng": -88.1535
+    }
+  },
+  "hours": "/data/sample/hours.json",
+  "menu": "/data/sample/menu.json",
+  "integrations": {
+    "ordering": {
+      "enabled": true,
+      "mode": "stripe"
+    },
+    "pickup": {
+      "enabled": true
+    },
+    "delivery": {
+      "enabled": true,
+      "provider": "uber",
+      "max_distance_miles": 8
+    },
+    "stripe": {
+      "publishableKey": ""
+    }
+  },
+  "social": {
+    "instagram": "shahirizadafreshmarket",
+    "facebook": "freshmarket"
+  },
+  "instagramFeed": {
+    "enabled": true,
+    "handle": "@shahirizadafreshmarket",
+    "userId": "",
+    "useMockData": true
+  },
+  "seo": {
+    "title": "Shahirizada Fresh Market | Premium Halal Meats & Groceries | Online Ordering",
+    "description": "Shop Shahirizada Fresh Market for premium halal meats and groceries. Halal, never-frozen meats — freshly cut daily in Naperville. Order online for pickup or delivery today.",
+    "keywords": "halal meat, halal grocery, online ordering, food delivery, pickup, fresh market, halal butcher, naperville, shahirizada"
+  },
+  "announcement": "🥩 Fresh halal meats delivered daily! Order online for pickup or delivery.",
+  "newsletter": true,
+  "loyalty": {
+    "enabled": true,
+    "earnPerDollar": 10,
+    "rewardThreshold": 500,
+    "loyaltyHref": "/loyalty"
+  },
+  "pricing": {
+    "tax_rate": 0.0875,
+    "service_fee_rate": 0.0,
+    "currency": "USD",
+    "delivery_fees": {
+      "zone_1_miles": 2,
+      "zone_1_fee": 2.99,
+      "zone_2_miles": 5,
+      "zone_2_fee": 4.99,
+      "zone_3_miles": 10,
+      "zone_3_fee": 7.99
+    }
+  },
+  "features": {
+    "catering": true,
+    "events": true,
+    "giftCards": true,
+    "careers": true
+  }
+}

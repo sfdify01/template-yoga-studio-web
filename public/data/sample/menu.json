@@ -1,0 +1,225 @@
+{
+  "categories": [
+    {
+      "id": "fresh-meats",
+      "name": "Fresh Halal Meats",
+      "description": "Premium quality, hand-cut daily",
+      "icon": "🥩",
+      "items": [
+        {
+          "id": "beef-ribeye",
+          "name": "Ribeye Steak",
+          "description": "USDA Choice, grass-fed, premium marbling - 1 lb",
+          "price": 18.99,
+          "image": "ribeye steak beef",
+          "imageUrl": "https://cdfllxxtgguyveowmdis.supabase.co/storage/v1/object/public/make-a05c3297-product-images/beef-ribeye-1761507704589.jpeg",
+          "dietary": [
+            "halal"
+          ],
+          "popular": true
+        },
+        {
+          "id": "beef-ground",
+          "name": "Ground Beef",
+          "description": "85% lean, freshly ground - 1 lb",
+          "price": 8.99,
+          "image": "ground beef fresh",
+          "imageUrl": "https://cdfllxxtgguyveowmdis.supabase.co/storage/v1/object/public/make-a05c3297-product-images/beef-ground-1761507753561.jpeg",
+          "dietary": [
+            "halal"
+          ],
+          "popular": true
+        },
+        {
+          "id": "lamb-chops",
+          "name": "Lamb Chops",
+          "description": "Premium cut, bone-in - 1 lb",
+          "price": 22.99,
+          "image": "lamb chops meat",
+          "imageUrl": "https://cdfllxxtgguyveowmdis.supabase.co/storage/v1/object/public/make-a05c3297-product-images/item-1762436836215-1762436858206.jpg",
+          "dietary": [
+            "halal"
+          ],
+          "popular": true
+        },
+        {
+          "id": "beef-sirloin",
+          "name": "Top Sirloin",
+          "description": "Premium cut, trimmed - 1 lb",
+          "price": 14.99,
+          "image": "sirloin steak beef",
+          "imageUrl": "https://cdfllxxtgguyveowmdis.supabase.co/storage/v1/object/public/make-a05c3297-product-images/beef-sirloin-1761507853025.webp",
+          "dietary": [
+            "halal"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "prepared-foods",
+      "name": "Prepared Foods",
+      "description": "Ready to heat and eat",
+      "icon": "🍱",
+      "items": [
+        {
+          "id": "beef-kofta",
+          "name": "Beef Kofta",
+          "description": "Spiced ground beef, formed - 8 pieces",
+          "price": 14.99,
+          "image": "beef kofta kabob",
+          "imageUrl": "https://cdfllxxtgguyveowmdis.supabase.co/storage/v1/object/public/make-a05c3297-product-images/beef-kofta-1761507973573.png",
+          "dietary": [
+            "halal"
+          ]
+        },
+        {
+          "id": "lamb-kebab",
+          "name": "Lamb Kebabs",
+          "description": "Tender lamb cubes, seasoned - 6 pieces",
+          "price": 19.99,
+          "image": "lamb kebab skewers",
+          "imageUrl": "https://cdfllxxtgguyveowmdis.supabase.co/storage/v1/object/public/make-a05c3297-product-images/lamb-kebab-1761508038123.jpg",
+          "dietary": [
+            "halal"
+          ],
+          "popular": true
+        }
+      ]
+    },
+    {
+      "id": "groceries",
+      "name": "Groceries & Staples",
+      "description": "Halal-certified products",
+      "icon": "🛒",
+      "items": [
+        {
+          "id": "basmati-rice",
+          "name": "Basmati Rice",
+          "description": "Premium long-grain - 10 lbs",
+          "price": 19.99,
+          "image": "basmati rice bag",
+          "imageUrl": "https://cdfllxxtgguyveowmdis.supabase.co/storage/v1/object/public/make-a05c3297-product-images/basmati-rice-1761508070126.jpg",
+          "dietary": [
+            "halal",
+            "vegan"
+          ]
+        },
+        {
+          "id": "olive-oil",
+          "name": "Extra Virgin Olive Oil",
+          "description": "Cold-pressed, imported - 1 liter",
+          "price": 16.99,
+          "image": "olive oil bottle",
+          "imageUrl": "https://cdfllxxtgguyveowmdis.supabase.co/storage/v1/object/public/make-a05c3297-product-images/olive-oil-1761509081565.jpg",
+          "dietary": [
+            "halal",
+            "vegan"
+          ]
+        },
+        {
+          "id": "spice-mix",
+          "name": "Middle Eastern Spice Mix",
+          "description": "Authentic blend - 8 oz",
+          "price": 8.99,
+          "image": "spices middle eastern",
+          "imageUrl": "https://cdfllxxtgguyveowmdis.supabase.co/storage/v1/object/public/make-a05c3297-product-images/item-1762437347484-1762437412992.avif",
+          "dietary": [
+            "halal",
+            "vegan"
+          ]
+        },
+        {
+          "id": "pita-bread",
+          "name": "Fresh Pita Bread",
+          "description": "Handmade daily - 10 pack",
+          "price": 5.99,
+          "image": "pita bread fresh",
+          "imageUrl": "https://cdfllxxtgguyveowmdis.supabase.co/storage/v1/object/public/make-a05c3297-product-images/pita-bread-1761509143757.jpg",
+          "dietary": [
+            "halal",
+            "vegetarian"
+          ]
+        },
+        {
+          "id": "dates",
+          "name": "Medjool Dates",
+          "description": "Premium, pitted - 1 lb",
+          "price": 12.99,
+          "image": "medjool dates",
+          "imageUrl": "https://cdfllxxtgguyveowmdis.supabase.co/storage/v1/object/public/make-a05c3297-product-images/dates-1761509182150.webp",
+          "dietary": [
+            "halal",
+            "vegan"
+          ]
+        },
+        {
+          "id": "hummus",
+          "name": "Fresh Hummus",
+          "description": "House-made, traditional - 16 oz",
+          "price": 7.99,
+          "image": "hummus bowl fresh",
+          "imageUrl": "https://cdfllxxtgguyveowmdis.supabase.co/storage/v1/object/public/make-a05c3297-product-images/hummus-1761509213950.jpg",
+          "dietary": [
+            "halal",
+            "vegan"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "specialty",
+      "name": "Specialty Items",
+      "description": "Imported delicacies",
+      "icon": "⭐",
+      "items": [
+        {
+          "id": "saffron",
+          "name": "Premium Saffron",
+          "description": "Persian, grade A - 5 grams",
+          "price": 29.99,
+          "image": "saffron threads spice",
+          "imageUrl": "https://cdfllxxtgguyveowmdis.supabase.co/storage/v1/object/public/make-a05c3297-product-images/item-1762437595505-1762437618139.jpg",
+          "dietary": [
+            "halal",
+            "vegan"
+          ]
+        },
+        {
+          "id": "turkish-delight",
+          "name": "Turkish Delight",
+          "description": "Assorted flavors - 1 lb box",
+          "price": 15.99,
+          "image": "turkish delight candy",
+          "imageUrl": "https://cdfllxxtgguyveowmdis.supabase.co/storage/v1/object/public/make-a05c3297-product-images/turkish-delight-1761509258239.jpg",
+          "dietary": [
+            "halal"
+          ]
+        },
+        {
+          "id": "halal-cheese",
+          "name": "Halal Cheese Assortment",
+          "description": "Mixed varieties - 1 lb",
+          "price": 13.99,
+          "image": "cheese platter assorted",
+          "imageUrl": "https://cdfllxxtgguyveowmdis.supabase.co/storage/v1/object/public/make-a05c3297-product-images/halal-cheese-1761509314323.png",
+          "dietary": [
+            "halal",
+            "vegetarian"
+          ]
+        },
+        {
+          "id": "honey",
+          "name": "Wild Flower Honey",
+          "description": "Raw, unfiltered - 16 oz",
+          "price": 14.99,
+          "image": "honey jar natural",
+          "imageUrl": "https://cdfllxxtgguyveowmdis.supabase.co/storage/v1/object/public/make-a05c3297-product-images/honey-1761509352785.jpg",
+          "dietary": [
+            "halal",
+            "vegetarian"
+          ]
+        }
+      ]
+    }
+  ]
+}

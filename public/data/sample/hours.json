@@ -1,0 +1,19 @@
+{
+  "timezone": "America/Chicago",
+  "schedule": {
+    "monday": { "open": "11:00", "close": "21:00", "closed": false },
+    "tuesday": { "open": "11:00", "close": "21:00", "closed": false },
+    "wednesday": { "open": "11:00", "close": "21:00", "closed": false },
+    "thursday": { "open": "11:00", "close": "22:00", "closed": false },
+    "friday": { "open": "11:00", "close": "23:00", "closed": false },
+    "saturday": { "open": "10:00", "close": "23:00", "closed": false },
+    "sunday": { "open": "10:00", "close": "20:00", "closed": false }
+  },
+  "specialHours": [
+    {
+      "date": "2025-12-25",
+      "note": "Closed for Christmas",
+      "closed": true
+    }
+  ]
+}

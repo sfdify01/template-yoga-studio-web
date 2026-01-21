@@ -1,0 +1,16 @@
+# Shahirzada Fresh Market - robots.txt
+
+# Allow all crawlers to access most content
+User-agent: *
+Allow: /
+
+# Block admin area (no public access)
+Disallow: /admin
+Disallow: /admin/*
+
+# Block demo/development pages
+Disallow: /demo/
+Disallow: /upload-blog-images
+
+# Sitemap location (if you generate one)
+# Sitemap: https://yourdomain.com/sitemap.xml
